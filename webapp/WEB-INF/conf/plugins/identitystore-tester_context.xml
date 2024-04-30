@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd" >
+
+    <bean id="identitystore-test.testDefinitionDAO" class="fr.paris.lutece.plugins.identitystore.modules.test.business.TestDefinitionDAO" />
+    <bean id="identitystore-test.testIdentityDAO" class="fr.paris.lutece.plugins.identitystore.modules.test.business.TestIdentityDAO" />
+    <bean id="identitystore-test.testIdentityAttributeDAO" class="fr.paris.lutece.plugins.identitystore.modules.test.business.TestIdentityAttributeDAO" />
+
+
+</beans>

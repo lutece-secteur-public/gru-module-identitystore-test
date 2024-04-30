@@ -1,0 +1,54 @@
+<#include "managetest_tabs.html" />
+<@tabs2 tab="testidentityattribute" />
+
+<@box>
+	<@boxHeader title='#i18n{module.identitystore.test.manage_testidentityattribute.title}' boxTools=true>
+		<@tform class='form-inline pull-right' name='manage_testidentityattribute' action='jsp/admin/plugins/identitystore/modules/test/ManageTestIdentityAttributes.jsp'>
+			<@button type='submit' name='view_createTestIdentityAttribute' buttonIcon='plus' title='#i18n{module.identitystore.test.manage_testidentityattributes.buttonAdd}' />
+		</@tform>
+	</@boxHeader>
+	<@boxBody>    
+    <@messages infos=infos />
+    <@paginationAdmin paginator=paginator combo=1 />
+    <div class="clearfix"></div>
+    <@table>
+        <tr>
+            <th>#i18n{module.identitystore.test.manage_testidentityattributes.columnKey}</th>
+            <th>#i18n{module.identitystore.test.manage_testidentityattributes.columnValue}</th>
+            <th>#i18n{module.identitystore.test.manage_testidentityattributes.columnCertifier}</th>
+            <th>#i18n{module.identitystore.test.manage_testidentityattributes.columnCertificationDate}</th>
+            <th>#i18n{module.identitystore.test.manage_testidentityattributes.columnCertificationLevel}</th>
+            <th>#i18n{portal.util.labelActions}</th>
+        </tr>
+        <@tableHeadBodySeparator />
+        <#list testidentityattribute_list as testidentityattribute >
+        <tr>
+            <td>
+				${testidentityattribute.key}
+			</td>
+            <td>
+				${testidentityattribute.value}
+			</td>
+            <td>
+				${testidentityattribute.certifier}
+			</td>
+            <td>
+				${testidentityattribute.certificationDate}
+			</td>
+            <td>
+				${testidentityattribute.certificationLevel}
+			</td>
+        	<td>
+				<@aButton href='jsp/admin/plugins/identitystore/modules/test/ManageTestIdentityAttributes.jsp?view=modifyTestIdentityAttribute&id=${testidentityattribute.id}' title='#i18n{portal.util.labelModify}' hideTitle=['all'] buttonIcon='pencil' />
+						
+				<@aButton href='jsp/admin/plugins/identitystore/modules/test/ManageTestIdentityAttributes.jsp?action=confirmRemoveTestIdentityAttribute&id=${testidentityattribute.id}' title='#i18n{portal.util.labelDelete}' buttonIcon='trash' hideTitle=['all'] color='btn-danger'  />
+
+	        </td>
+        </tr>
+        </#list>
+    </@table>
+
+    <@paginationAdmin paginator=paginator />
+
+  </@boxBody>
+</@box>

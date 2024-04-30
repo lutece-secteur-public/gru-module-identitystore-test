@@ -1,0 +1,38 @@
+<#include "managetest_tabs.html" />
+<@tabs2 tab="testdefinition" />
+
+<@box>
+	<@boxHeader title='#i18n{module.identitystore.test.manage_testdefinition.title}' boxTools=true>
+		<@tform class='form-inline pull-right' name='manage_testdefinition' action='jsp/admin/plugins/identitystore/modules/test/ManageTestDefinitions.jsp'>
+			<@button type='submit' name='view_createTestDefinition' buttonIcon='plus' title='#i18n{module.identitystore.test.manage_testdefinitions.buttonAdd}' />
+		</@tform>
+	</@boxHeader>
+	<@boxBody>    
+    <@messages infos=infos />
+    <@paginationAdmin paginator=paginator combo=1 />
+    <div class="clearfix"></div>
+    <@table>
+        <tr>
+            <th>#i18n{module.identitystore.test.manage_testdefinitions.columnName}</th>
+            <th>#i18n{portal.util.labelActions}</th>
+        </tr>
+        <@tableHeadBodySeparator />
+        <#list testdefinition_list as testdefinition >
+        <tr>
+            <td>
+				${testdefinition.name}
+			</td>
+        	<td>
+				<@aButton href='jsp/admin/plugins/identitystore/modules/test/ManageTestDefinitions.jsp?view=modifyTestDefinition&id=${testdefinition.id}' title='#i18n{portal.util.labelModify}' hideTitle=['all'] buttonIcon='pencil' />
+						
+				<@aButton href='jsp/admin/plugins/identitystore/modules/test/ManageTestDefinitions.jsp?action=confirmRemoveTestDefinition&id=${testdefinition.id}' title='#i18n{portal.util.labelDelete}' buttonIcon='trash' hideTitle=['all'] color='btn-danger'  />
+
+	        </td>
+        </tr>
+        </#list>
+    </@table>
+
+    <@paginationAdmin paginator=paginator />
+
+  </@boxBody>
+</@box>

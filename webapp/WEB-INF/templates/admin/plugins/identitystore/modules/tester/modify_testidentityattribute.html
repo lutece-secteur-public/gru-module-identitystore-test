@@ -1,0 +1,31 @@
+<#include "managetest_tabs.html" />
+<@tabs2 tab="testidentityattribute" />
+
+
+<@box>
+	<@boxHeader title='#i18n{module.identitystore.test.modify_testidentityattribute.title}' />
+	<@boxBody>
+    <@tform class="form-horizontal" method="post" name="modify_testidentityattribute" action="jsp/admin/plugins/identitystore/modules/test/ManageTestIdentityAttributes.jsp" >
+			<@messages errors=errors />
+			<@input type="hidden" id="id" name="id" value="${testidentityattribute.id}"/>
+			<@input type="hidden" value="${token}" name="token" />
+			
+			<@formGroup labelFor='key' labelKey='#i18n{module.identitystore.test.modify_testidentityattribute.labelKey}' mandatory=true>
+				<@input type='text' id='key' name='key'  value='${testidentityattribute.key!\'\'}' tabIndex='0' />
+			</@formGroup>
+			<@formGroup labelFor='value' labelKey='#i18n{module.identitystore.test.modify_testidentityattribute.labelValue}' mandatory=true>
+				<@input type='text' id='value' name='value'  value='${testidentityattribute.value!\'\'}' tabIndex='1' />
+			</@formGroup>
+			<@formGroup labelFor='certifier' labelKey='#i18n{module.identitystore.test.modify_testidentityattribute.labelCertifier}' mandatory=true>
+				<@input type='text' id='certifier' name='certifier'  value='${testidentityattribute.certifier!\'\'}' tabIndex='2' />
+			</@formGroup>
+			<@formGroup labelFor='certification_date' labelKey='#i18n{module.identitystore.test.modify_testidentityattribute.labelCertificationDate}' mandatory=true>
+				<@input type='text' id='certification_date' name='certification_date'  value='${testidentityattribute.certificationDate!\'\'}' tabIndex='3' />
+			</@formGroup>
+			<@formGroup labelFor='certification_level' labelKey='#i18n{module.identitystore.test.modify_testidentityattribute.labelCertificationLevel}' mandatory=true>
+				<@input type='text' id='certification_level' name='certification_level'  value='${testidentityattribute.certificationLevel!\'\'}' tabIndex='4' />
+			</@formGroup>
+        <@actionButtons button1Name="action_modifyTestIdentityAttribute" button2Name="view_manageTestIdentityAttribute"/>
+    </@tform>
+	</@boxBody>
+</@box>

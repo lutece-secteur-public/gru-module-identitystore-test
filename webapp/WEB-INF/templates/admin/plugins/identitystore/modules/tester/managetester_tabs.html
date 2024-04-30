@@ -1,0 +1,16 @@
+<#macro tabs2 tab >
+<@tabs>
+	<@tabList>
+			<li <#if tab="testdefinition">class="active"</#if>>
+				<@aButton href="jsp/admin/plugins/identitystore/modules/test/ManageTestDefinitions.jsp">#i18n{module.identitystore.test.manage_testdefinitions.pageTitle}</@aButton>
+			</li>
+			<li <#if tab="testidentity">class="active"</#if>>
+				<@aButton href="jsp/admin/plugins/identitystore/modules/test/ManageTestIdentitys.jsp">#i18n{module.identitystore.test.manage_testidentitys.pageTitle}</@aButton>
+			</li>
+			<li <#if tab="testidentityattribute">class="active"</#if>>
+				<@aButton href="jsp/admin/plugins/identitystore/modules/test/ManageTestIdentityAttributes.jsp">#i18n{module.identitystore.test.manage_testidentityattributes.pageTitle}</@aButton>
+			</li>
+	</@tabList>
+</@tabs>
+
+</#macro>

@@ -1,0 +1,25 @@
+<#include "managetest_tabs.html" />
+<@tabs2 tab="testidentity" />
+<@box>
+	<@boxHeader title='#i18n{module.identitystore.test.create_testidentity.title}' />
+	<@boxBody>
+    <@tform name='create_testidentity' action='jsp/admin/plugins/identitystore/modules/test/ManageTestIdentitys.jsp' >
+
+        <@messages errors=errors />
+        <@input type="hidden" id="id" name="id"/>
+        <@input type="hidden" value="${token}" name="token" />
+
+		<@formGroup labelFor='name' labelKey='#i18n{module.identitystore.test.modify_testidentity.labelName}' mandatory=true>
+			<@input type='text' id='name' name='name'  value='${testidentity.name!\'\'}' tabIndex='0' />
+		</@formGroup>
+		<@formGroup labelFor='customer_id' labelKey='#i18n{module.identitystore.test.modify_testidentity.labelCustomerId}' mandatory=true>
+			<@input type='text' id='customer_id' name='customer_id'  value='${testidentity.customerId!\'\'}' tabIndex='1' />
+		</@formGroup>
+		<@formGroup labelFor='connection_id' labelKey='#i18n{module.identitystore.test.modify_testidentity.labelConnectionId}' mandatory=true>
+			<@input type='text' id='connection_id' name='connection_id'  value='${testidentity.connectionId!\'\'}' tabIndex='2' />
+		</@formGroup>
+				
+		<@actionButtons button1Name="action_createTestIdentity" button2Name="view_manageTestIdentity"/>
+    </@tform>
+	</@boxBody>
+</@box>

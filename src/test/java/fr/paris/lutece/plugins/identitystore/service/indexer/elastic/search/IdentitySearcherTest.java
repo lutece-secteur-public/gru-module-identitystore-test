@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2023, City of Paris
+ * Copyright (c) 2002-2024, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -84,28 +84,28 @@ public class IdentitySearcherTest extends IdentityStoreJsonDataTestCase
         System.out.println( "----- Running test definition: " + testDefinition.getName( ) + " -----" );
         System.out.println( "----- Init test data -----" );
         testDefinition.getInputs( ).stream( )
-            .map( testIdentity -> new ImmutablePair<>( testIdentity.getName( ), this.toIdentityChangeRequest( testIdentity ) ) ).forEach( pair -> {
-                try
-                {
-                    final IdentityChangeResponse response = new IdentityChangeResponse( );
-                    IdentityService.instance( ).create( pair.getRight( ), this.getAuthor(), IdentityStoreTestContext.SAMPLE_APPCODE, response );
-                    if ( response.getStatus( ).getType() != ResponseStatusType.SUCCESS )
+                .map( testIdentity -> new ImmutablePair<>( testIdentity.getName( ), this.toIdentityChangeRequest( testIdentity ) ) ).forEach( pair -> {
+                    try
                     {
-                        System.out.println( "Erreur lors de la création de " + pair.getLeft( ) + " :: Status " + response.getStatus( ) + " :: Message "
-                                + response.getStatus( ).getMessage() );
+                        final IdentityChangeResponse response = new IdentityChangeResponse( );
+                        IdentityService.instance( ).create( pair.getRight( ), this.getAuthor( ), IdentityStoreTestContext.SAMPLE_APPCODE, response );
+                        if ( response.getStatus( ).getType( ) != ResponseStatusType.SUCCESS )
+                        {
+                            System.out.println( "Erreur lors de la création de " + pair.getLeft( ) + " :: Status " + response.getStatus( ) + " :: Message "
+                                    + response.getStatus( ).getMessage( ) );
+                        }
                     }
-                }
-                catch( IdentityStoreException e )
-                {
-                    throw new RuntimeException( e );
-                }
-            } );
+                    catch( IdentityStoreException e )
+                    {
+                        throw new RuntimeException( e );
+                    }
+                } );
         System.out.println( "----- Execute search request -----" );
         Thread.sleep( 1000 );
         final IdentitySearchResponse identitySearchResponse = new IdentitySearchResponse( );
         try
         {
-            IdentityService.instance( ).search( this.toIdentitySearchResponse( testDefinition.getTest( ) ), this.getAuthor(), identitySearchResponse,
+            IdentityService.instance( ).search( this.toIdentitySearchResponse( testDefinition.getTest( ) ), this.getAuthor( ), identitySearchResponse,
                     IdentityStoreTestContext.SAMPLE_APPCODE );
         }
         catch( ServiceContractNotFoundException e )
@@ -124,20 +124,15 @@ public class IdentitySearcherTest extends IdentityStoreJsonDataTestCase
         System.out.println( "----- Truncate BDD tables -----" );
         final DataSource ds = getDataSource( postgreSQLContainer );
         final Statement statement = ds.getConnection( ).createStatement( );
-        statement.execute( "truncate table "
-                + " identitystore_identity,"
-                + " identitystore_identity_history,"
-                + " identitystore_identity_attribute,"
-                + " identitystore_identity_attribute_certificate,"
-                + " identitystore_identity_attribute_history,"
-                + " identitystore_index_action;" );
+        statement.execute( "truncate table " + " identitystore_identity," + " identitystore_identity_history," + " identitystore_identity_attribute,"
+                + " identitystore_identity_attribute_certificate," + " identitystore_identity_attribute_history," + " identitystore_index_action;" );
 
         /* Clean ES index */
         System.out.println( "----- Delete ES Index -----" );
         final IdentityIndexer identityIndexer = new IdentityIndexer( "http://" + elasticsearchContainer.getHttpHostAddress( ) );
         final String indexBehindAlias = identityIndexer.getIndexBehindAlias( CURRENT_INDEX_ALIAS );
         identityIndexer.deleteIndex( indexBehindAlias );
-        identityIndexer.initIndex(CURRENT_INDEX);
+        identityIndexer.initIndex( CURRENT_INDEX );
         identityIndexer.addAliasOnIndex( CURRENT_INDEX, CURRENT_INDEX_ALIAS );
     }
 
@@ -199,8 +194,8 @@ public class IdentitySearcherTest extends IdentityStoreJsonDataTestCase
             search.getAttributes( ).add( searchAttributeDto );
             searchAttributeDto.setKey( testAttribute.getKey( ) );
             searchAttributeDto.setValue( testAttribute.getValue( ) );
-            final boolean strict = !StringUtils.equalsAny(testAttribute.getKey(), "first_name", "family_name", "preferred_username");
-            searchAttributeDto.setTreatmentType(strict ? AttributeTreatmentType.STRICT : AttributeTreatmentType.APPROXIMATED);
+            final boolean strict = !StringUtils.equalsAny( testAttribute.getKey( ), "first_name", "family_name", "preferred_username" );
+            searchAttributeDto.setTreatmentType( strict ? AttributeTreatmentType.STRICT : AttributeTreatmentType.APPROXIMATED );
         } );
         return identitySearchRequest;
     }

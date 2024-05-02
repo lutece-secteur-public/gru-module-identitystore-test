@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2023, City of Paris
+ * Copyright (c) 2002-2024, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,8 +82,7 @@ public class IdentityStoreResearchTest extends IdentityStoreBDDAndESTestCase
         identityChangeRequest.setIdentity( identityDto );
 
         final IdentityChangeResponse response = new IdentityChangeResponse( );
-        final Identity createdIdentity = IdentityService.instance( ).create( identityChangeRequest, origin,
-                IdentityStoreTestContext.SAMPLE_APPCODE, response );
+        final Identity createdIdentity = IdentityService.instance( ).create( identityChangeRequest, origin, IdentityStoreTestContext.SAMPLE_APPCODE, response );
         System.out.println( response.getStatus( ).getHttpCode( ) );
         assertNotNull( createdIdentity );
         System.out.println( "End of test 1!" );

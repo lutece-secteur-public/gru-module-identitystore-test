@@ -28,7 +28,7 @@ identitystore.jwt.appCode.claimName=http://wso2.org/claims/applicationnamewritab
 identitystore.search.maxNbIdentityReturned=100
 
 ## Duplicates rules
-identitystore.identity.duplicates.creation.0=email_login
+identitystore.identity.duplicates.creation.0=login
 identitystore.identity.duplicates.creation.1=family_name,first_name,birthdate,birthplace_code,birthcountry_code,gender
 
 #109 Service "certitude d'identit� identique" pour l'update

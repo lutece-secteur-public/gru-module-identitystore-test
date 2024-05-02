@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2023, City of Paris
+ * Copyright (c) 2002-2024, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,7 @@ package fr.paris.lutece.plugins.identitystore;
  */
 public class IdentityStoreTestContext
 {
-    public static final String ELASTICSEARCH_VERSION = "8.6.2";
+    public static final String ELASTICSEARCH_VERSION = "8.13.0";
     public static final String POSTGRES_VERSION = "9.4.26";
     public final static String SAMPLE_APPCODE = "TESTAPP1";
     public final static String ATTRKEY_1 = "first_name";

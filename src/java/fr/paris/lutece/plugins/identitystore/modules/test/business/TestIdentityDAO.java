@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2023, City of Paris
+ * Copyright (c) 2002-2024, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,6 @@
  * License 1.0
  */
 
-
 package fr.paris.lutece.plugins.identitystore.modules.test.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
@@ -64,20 +63,20 @@ public final class TestIdentityDAO implements ITestIdentityDAO
     @Override
     public void insert( TestIdentity testIdentity, Plugin plugin )
     {
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, Statement.RETURN_GENERATED_KEYS, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, Statement.RETURN_GENERATED_KEYS, plugin ) )
         {
             int nIndex = 1;
-            daoUtil.setString( nIndex++ , testIdentity.getName( ) );
-            daoUtil.setString( nIndex++ , testIdentity.getCustomerId( ) );
-            daoUtil.setString( nIndex++ , testIdentity.getConnectionId( ) );
-            
+            daoUtil.setString( nIndex++, testIdentity.getName( ) );
+            daoUtil.setString( nIndex++, testIdentity.getCustomerId( ) );
+            daoUtil.setString( nIndex++, testIdentity.getConnectionId( ) );
+
             daoUtil.executeUpdate( );
-            if ( daoUtil.nextGeneratedKey( ) ) 
+            if ( daoUtil.nextGeneratedKey( ) )
             {
                 testIdentity.setId( daoUtil.getGeneratedKeyInt( 1 ) );
             }
         }
-        
+
     }
 
     /**
@@ -86,24 +85,24 @@ public final class TestIdentityDAO implements ITestIdentityDAO
     @Override
     public Optional<TestIdentity> load( int nKey, Plugin plugin )
     {
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
-	        daoUtil.setInt( 1 , nKey );
-	        daoUtil.executeQuery( );
-	        TestIdentity testIdentity = null;
-	
-	        if ( daoUtil.next( ) )
-	        {
-	            testIdentity = new TestIdentity();
-	            int nIndex = 1;
-	            
-	            testIdentity.setId( daoUtil.getInt( nIndex++ ) );
-			    testIdentity.setName( daoUtil.getString( nIndex++ ) );
-			    testIdentity.setCustomerId( daoUtil.getString( nIndex++ ) );
-			    testIdentity.setConnectionId( daoUtil.getString( nIndex ) );
-	        }
-	
-	        return Optional.ofNullable( testIdentity );
+            daoUtil.setInt( 1, nKey );
+            daoUtil.executeQuery( );
+            TestIdentity testIdentity = null;
+
+            if ( daoUtil.next( ) )
+            {
+                testIdentity = new TestIdentity( );
+                int nIndex = 1;
+
+                testIdentity.setId( daoUtil.getInt( nIndex++ ) );
+                testIdentity.setName( daoUtil.getString( nIndex++ ) );
+                testIdentity.setCustomerId( daoUtil.getString( nIndex++ ) );
+                testIdentity.setConnectionId( daoUtil.getString( nIndex ) );
+            }
+
+            return Optional.ofNullable( testIdentity );
         }
     }
 
@@ -113,10 +112,10 @@ public final class TestIdentityDAO implements ITestIdentityDAO
     @Override
     public void delete( int nKey, Plugin plugin )
     {
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
         {
-	        daoUtil.setInt( 1 , nKey );
-	        daoUtil.executeUpdate( );
+            daoUtil.setInt( 1, nKey );
+            daoUtil.executeUpdate( );
         }
     }
 
@@ -126,16 +125,16 @@ public final class TestIdentityDAO implements ITestIdentityDAO
     @Override
     public void store( TestIdentity testIdentity, Plugin plugin )
     {
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
         {
-	        int nIndex = 1;
-	        
-            	daoUtil.setString( nIndex++ , testIdentity.getName( ) );
-            	daoUtil.setString( nIndex++ , testIdentity.getCustomerId( ) );
-            	daoUtil.setString( nIndex++ , testIdentity.getConnectionId( ) );
-	        daoUtil.setInt( nIndex , testIdentity.getId( ) );
-	
-	        daoUtil.executeUpdate( );
+            int nIndex = 1;
+
+            daoUtil.setString( nIndex++, testIdentity.getName( ) );
+            daoUtil.setString( nIndex++, testIdentity.getCustomerId( ) );
+            daoUtil.setString( nIndex++, testIdentity.getConnectionId( ) );
+            daoUtil.setInt( nIndex, testIdentity.getId( ) );
+
+            daoUtil.executeUpdate( );
         }
     }
 
@@ -145,28 +144,28 @@ public final class TestIdentityDAO implements ITestIdentityDAO
     @Override
     public List<TestIdentity> selectTestIdentitysList( Plugin plugin )
     {
-        List<TestIdentity> testIdentityList = new ArrayList<>(  );
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
+        List<TestIdentity> testIdentityList = new ArrayList<>( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-	        daoUtil.executeQuery(  );
-	
-	        while ( daoUtil.next(  ) )
-	        {
-	            TestIdentity testIdentity = new TestIdentity(  );
-	            int nIndex = 1;
-	            
-	            testIdentity.setId( daoUtil.getInt( nIndex++ ) );
-			    testIdentity.setName( daoUtil.getString( nIndex++ ) );
-			    testIdentity.setCustomerId( daoUtil.getString( nIndex++ ) );
-			    testIdentity.setConnectionId( daoUtil.getString( nIndex ) );
-	
-	            testIdentityList.add( testIdentity );
-	        }
-	
-	        return testIdentityList;
+            daoUtil.executeQuery( );
+
+            while ( daoUtil.next( ) )
+            {
+                TestIdentity testIdentity = new TestIdentity( );
+                int nIndex = 1;
+
+                testIdentity.setId( daoUtil.getInt( nIndex++ ) );
+                testIdentity.setName( daoUtil.getString( nIndex++ ) );
+                testIdentity.setCustomerId( daoUtil.getString( nIndex++ ) );
+                testIdentity.setConnectionId( daoUtil.getString( nIndex ) );
+
+                testIdentityList.add( testIdentity );
+            }
+
+            return testIdentityList;
         }
     }
-    
+
     /**
      * {@inheritDoc }
      */
@@ -174,84 +173,86 @@ public final class TestIdentityDAO implements ITestIdentityDAO
     public List<Integer> selectIdTestIdentitysList( Plugin plugin )
     {
         List<Integer> testIdentityList = new ArrayList<>( );
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_ID, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_ID, plugin ) )
         {
-	        daoUtil.executeQuery(  );
-	
-	        while ( daoUtil.next(  ) )
-	        {
-	            testIdentityList.add( daoUtil.getInt( 1 ) );
-	        }
-	
-	        return testIdentityList;
+            daoUtil.executeQuery( );
+
+            while ( daoUtil.next( ) )
+            {
+                testIdentityList.add( daoUtil.getInt( 1 ) );
+            }
+
+            return testIdentityList;
         }
     }
-    
+
     /**
      * {@inheritDoc }
      */
     @Override
     public ReferenceList selectTestIdentitysReferenceList( Plugin plugin )
     {
-        ReferenceList testIdentityList = new ReferenceList();
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
+        ReferenceList testIdentityList = new ReferenceList( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-	        daoUtil.executeQuery(  );
-	
-	        while ( daoUtil.next(  ) )
-	        {
-	            testIdentityList.addItem( daoUtil.getInt( 1 ) , daoUtil.getString( 2 ) );
-	        }
-	
-	        return testIdentityList;
-    	}
+            daoUtil.executeQuery( );
+
+            while ( daoUtil.next( ) )
+            {
+                testIdentityList.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) );
+            }
+
+            return testIdentityList;
+        }
     }
-    
+
     /**
      * {@inheritDoc }
      */
-	@Override
-	public List<TestIdentity> selectTestIdentitysListByIds( Plugin plugin, List<Integer> listIds ) {
-		List<TestIdentity> testIdentityList = new ArrayList<>(  );
-		
-		StringBuilder builder = new StringBuilder( );
+    @Override
+    public List<TestIdentity> selectTestIdentitysListByIds( Plugin plugin, List<Integer> listIds )
+    {
+        List<TestIdentity> testIdentityList = new ArrayList<>( );
 
-		if ( !listIds.isEmpty( ) )
-		{
-			for( int i = 0 ; i < listIds.size(); i++ ) {
-			    builder.append( "?," );
-			}
-	
-			String placeHolders =  builder.deleteCharAt( builder.length( ) -1 ).toString( );
-			String stmt = SQL_QUERY_SELECTALL_BY_IDS + placeHolders + ")";
-			
-			
-	        try ( DAOUtil daoUtil = new DAOUtil( stmt, plugin ) )
-	        {
-	        	int index = 1;
-				for( Integer n : listIds ) {
-					daoUtil.setInt(  index++, n ); 
-				}
-	        	
-	        	daoUtil.executeQuery(  );
-	        	while ( daoUtil.next(  ) )
-		        {
-		        	TestIdentity testIdentity = new TestIdentity(  );
-		            int nIndex = 1;
-		            
-		            testIdentity.setId( daoUtil.getInt( nIndex++ ) );
-				    testIdentity.setName( daoUtil.getString( nIndex++ ) );
-				    testIdentity.setCustomerId( daoUtil.getString( nIndex++ ) );
-				    testIdentity.setConnectionId( daoUtil.getString( nIndex ) );
-		            
-		            testIdentityList.add( testIdentity );
-		        }
-		
-		        daoUtil.free( );
-		        
-	        }
-	    }
-		return testIdentityList;
-		
-	}
+        StringBuilder builder = new StringBuilder( );
+
+        if ( !listIds.isEmpty( ) )
+        {
+            for ( int i = 0; i < listIds.size( ); i++ )
+            {
+                builder.append( "?," );
+            }
+
+            String placeHolders = builder.deleteCharAt( builder.length( ) - 1 ).toString( );
+            String stmt = SQL_QUERY_SELECTALL_BY_IDS + placeHolders + ")";
+
+            try ( DAOUtil daoUtil = new DAOUtil( stmt, plugin ) )
+            {
+                int index = 1;
+                for ( Integer n : listIds )
+                {
+                    daoUtil.setInt( index++, n );
+                }
+
+                daoUtil.executeQuery( );
+                while ( daoUtil.next( ) )
+                {
+                    TestIdentity testIdentity = new TestIdentity( );
+                    int nIndex = 1;
+
+                    testIdentity.setId( daoUtil.getInt( nIndex++ ) );
+                    testIdentity.setName( daoUtil.getString( nIndex++ ) );
+                    testIdentity.setCustomerId( daoUtil.getString( nIndex++ ) );
+                    testIdentity.setConnectionId( daoUtil.getString( nIndex ) );
+
+                    testIdentityList.add( testIdentity );
+                }
+
+                daoUtil.free( );
+
+            }
+        }
+        return testIdentityList;
+
+    }
 }

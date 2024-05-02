@@ -4,7 +4,7 @@
     "test": {
       "attributes": [
         {
-          "key": "email_login",
+          "key": "login",
           "value": "j.dupont@yopmail.com",
           "type": "string"
         }
@@ -15,7 +15,7 @@
         "name": "Identité 1",
         "attributes": [
           {
-            "key": "email_login",
+            "key": "login",
             "value": "j.dupont@yopmail.com",
             "type": "string"
           },
@@ -45,7 +45,7 @@
             "type": "string"
           },
           {
-            "key": "email_login",
+            "key": "login",
             "value": "j.dupont@gmail.com",
             "type": "string"
           },
@@ -70,7 +70,7 @@
             "type": "string"
           },
           {
-            "key": "email_login",
+            "key": "login",
             "value": "jdupont@yopmail.com",
             "type": "string"
           },
@@ -95,7 +95,7 @@
             "type": "string"
           },
           {
-            "key": "email_login",
+            "key": "login",
             "value": "j.dupon@yopmail.com",
             "type": "string"
           },
@@ -120,7 +120,7 @@
             "type": "string"
           },
           {
-            "key": "email_login",
+            "key": "login",
             "value": "j.depont@yopmail.com",
             "type": "string"
           },
@@ -142,7 +142,7 @@
         "name": "Identité 1",
         "attributes": [
           {
-            "key": "email_login",
+            "key": "login",
             "value": "j.dupont@yopmail.com",
             "type": "string"
           },

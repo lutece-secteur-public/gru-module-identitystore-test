@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2023, City of Paris
+ * Copyright (c) 2002-2024, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -70,13 +70,13 @@ public class ElasticClientTest extends IdentityStoreBDDAndESTestCase
         assertTrue( elasticClient.isExists( INDEX ) );
 
         System.out.println( "----- Create alias on index -----" );
-        final AliasActions aliasActions = new AliasActions();
-        final AliasAction addAction = new AliasAction();
-        addAction.setIndex(INDEX);
-        addAction.setName("add");
-        addAction.setAlias(ALIAS);
-        aliasActions.addAction(addAction);
-        elasticClient.addAliasOnIndex(aliasActions);
+        final AliasActions aliasActions = new AliasActions( );
+        final AliasAction addAction = new AliasAction( );
+        addAction.setIndex( INDEX );
+        addAction.setName( "add" );
+        addAction.setAlias( ALIAS );
+        aliasActions.addAction( addAction );
+        elasticClient.addAliasOnIndex( aliasActions );
         assertTrue( elasticClient.isExists( ALIAS ) );
 
         System.out.println( "----- Create Document -----" );

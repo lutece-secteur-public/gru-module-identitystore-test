@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2023, City of Paris
+ * Copyright (c) 2002-2024, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,6 @@
  *
  * License 1.0
  */
- 
 package fr.paris.lutece.plugins.identitystore.modules.test.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
@@ -46,22 +45,31 @@ public interface ITestDefinitionDAO
 {
     /**
      * Insert a new record in the table.
-     * @param testDefinition instance of the TestDefinition object to insert
-     * @param plugin the Plugin
+     * 
+     * @param testDefinition
+     *            instance of the TestDefinition object to insert
+     * @param plugin
+     *            the Plugin
      */
     void insert( TestDefinition testDefinition, Plugin plugin );
 
     /**
      * Update the record in the table
-     * @param testDefinition the reference of the TestDefinition
-     * @param plugin the Plugin
+     * 
+     * @param testDefinition
+     *            the reference of the TestDefinition
+     * @param plugin
+     *            the Plugin
      */
     void store( TestDefinition testDefinition, Plugin plugin );
 
     /**
      * Delete a record from the table
-     * @param nKey The identifier of the TestDefinition to delete
-     * @param plugin the Plugin
+     * 
+     * @param nKey
+     *            The identifier of the TestDefinition to delete
+     * @param plugin
+     *            the Plugin
      */
     void delete( int nKey, Plugin plugin );
 
@@ -70,38 +78,50 @@ public interface ITestDefinitionDAO
 
     /**
      * Load the data from the table
-     * @param nKey The identifier of the testDefinition
-     * @param plugin the Plugin
+     * 
+     * @param nKey
+     *            The identifier of the testDefinition
+     * @param plugin
+     *            the Plugin
      * @return The instance of the testDefinition
      */
     Optional<TestDefinition> load( int nKey, Plugin plugin );
 
     /**
      * Load the data of all the testDefinition objects and returns them as a list
-     * @param plugin the Plugin
+     * 
+     * @param plugin
+     *            the Plugin
      * @return The list which contains the data of all the testDefinition objects
      */
     List<TestDefinition> selectTestDefinitionsList( Plugin plugin );
-    
+
     /**
      * Load the id of all the testDefinition objects and returns them as a list
-     * @param plugin the Plugin
+     * 
+     * @param plugin
+     *            the Plugin
      * @return The list which contains the id of all the testDefinition objects
      */
     List<Integer> selectIdTestDefinitionsList( Plugin plugin );
-    
+
     /**
      * Load the data of all the testDefinition objects and returns them as a referenceList
-     * @param plugin the Plugin
+     * 
+     * @param plugin
+     *            the Plugin
      * @return The referenceList which contains the data of all the testDefinition objects
      */
     ReferenceList selectTestDefinitionsReferenceList( Plugin plugin );
-    
+
     /**
      * Load the data of all the avant objects and returns them as a list
-     * @param plugin the Plugin
-     * @param listIds liste of ids
+     * 
+     * @param plugin
+     *            the Plugin
+     * @param listIds
+     *            liste of ids
      * @return The list which contains the data of all the avant objects
      */
-	List<TestDefinition> selectTestDefinitionsListByIds( Plugin _plugin, List<Integer> listIds );
+    List<TestDefinition> selectTestDefinitionsListByIds( Plugin _plugin, List<Integer> listIds );
 }

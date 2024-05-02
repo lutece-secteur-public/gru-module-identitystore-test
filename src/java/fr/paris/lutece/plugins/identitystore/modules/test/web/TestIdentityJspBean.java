@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2023, City of Paris
+ * Copyright (c) 2002-2024, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,6 @@
  *
  * License 1.0
  */
- 
 package fr.paris.lutece.plugins.identitystore.modules.test.web;
 
 import fr.paris.lutece.portal.service.message.AdminMessage;
@@ -59,7 +58,7 @@ import fr.paris.lutece.plugins.identitystore.modules.test.business.TestIdentityH
  * This class provides the user interface to manage TestIdentity features ( manage, create, modify, remove )
  */
 @Controller( controllerJsp = "ManageTestIdentitys.jsp", controllerPath = "jsp/admin/plugins/identitystore/modules/test/", right = "IDENTITYSTORE_TEST_MANAGEMENT" )
-public class TestIdentityJspBean extends AbstractManageTesterJspBean <Integer, TestIdentity>
+public class TestIdentityJspBean extends AbstractManageTesterJspBean<Integer, TestIdentity>
 {
     // Templates
     private static final String TEMPLATE_MANAGE_TESTIDENTITYS = "/admin/plugins/identitystore/modules/test/manage_testidentitys.html";
@@ -101,70 +100,72 @@ public class TestIdentityJspBean extends AbstractManageTesterJspBean <Integer, T
     private static final String INFO_TESTIDENTITY_CREATED = "module.identitystore.test.info.testidentity.created";
     private static final String INFO_TESTIDENTITY_UPDATED = "module.identitystore.test.info.testidentity.updated";
     private static final String INFO_TESTIDENTITY_REMOVED = "module.identitystore.test.info.testidentity.removed";
-    
+
     // Errors
     private static final String ERROR_RESOURCE_NOT_FOUND = "Resource not found";
-    
+
     // Session variable to store working values
     private TestIdentity _testidentity;
     private List<Integer> _listIdTestIdentitys;
-    
+
     /**
      * Build the Manage View
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return The page
      */
     @View( value = VIEW_MANAGE_TESTIDENTITYS, defaultView = true )
     public String getManageTestIdentitys( HttpServletRequest request )
     {
         _testidentity = null;
-        
-        if ( request.getParameter( AbstractPaginator.PARAMETER_PAGE_INDEX) == null || _listIdTestIdentitys.isEmpty( ) )
+
+        if ( request.getParameter( AbstractPaginator.PARAMETER_PAGE_INDEX ) == null || _listIdTestIdentitys.isEmpty( ) )
         {
-        	_listIdTestIdentitys = TestIdentityHome.getIdTestIdentitysList(  );
+            _listIdTestIdentitys = TestIdentityHome.getIdTestIdentitysList( );
         }
-        
+
         Map<String, Object> model = getPaginatedListModel( request, MARK_TESTIDENTITY_LIST, _listIdTestIdentitys, JSP_MANAGE_TESTIDENTITYS );
 
         return getPage( PROPERTY_PAGE_TITLE_MANAGE_TESTIDENTITYS, TEMPLATE_MANAGE_TESTIDENTITYS, model );
     }
 
-	/**
+    /**
      * Get Items from Ids list
+     * 
      * @param listIds
      * @return the populated list of items corresponding to the id List
      */
-	@Override
-	List<TestIdentity> getItemsFromIds( List<Integer> listIds ) 
-	{
-		List<TestIdentity> listTestIdentity = TestIdentityHome.getTestIdentitysListByIds( listIds );
-		
-		// keep original order
-        return listTestIdentity.stream()
-                 .sorted(Comparator.comparingInt( notif -> listIds.indexOf( notif.getId())))
-                 .collect(Collectors.toList());
-	}
-    
+    @Override
+    List<TestIdentity> getItemsFromIds( List<Integer> listIds )
+    {
+        List<TestIdentity> listTestIdentity = TestIdentityHome.getTestIdentitysListByIds( listIds );
+
+        // keep original order
+        return listTestIdentity.stream( ).sorted( Comparator.comparingInt( notif -> listIds.indexOf( notif.getId( ) ) ) ).collect( Collectors.toList( ) );
+    }
+
     /**
-    * reset the _listIdTestIdentitys list
-    */
+     * reset the _listIdTestIdentitys list
+     */
     public void resetListId( )
     {
-    	_listIdTestIdentitys = new ArrayList<>( );
+        _listIdTestIdentitys = new ArrayList<>( );
     }
 
     /**
      * Returns the form to create a testidentity
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return the html code of the testidentity form
      */
     @View( VIEW_CREATE_TESTIDENTITY )
     public String getCreateTestIdentity( HttpServletRequest request )
     {
-        _testidentity = ( _testidentity != null ) ? _testidentity : new TestIdentity(  );
+        _testidentity = ( _testidentity != null ) ? _testidentity : new TestIdentity( );
 
-        Map<String, Object> model = getModel(  );
+        Map<String, Object> model = getModel( );
         model.put( MARK_TESTIDENTITY, _testidentity );
         model.put( SecurityTokenService.MARK_TOKEN, SecurityTokenService.getInstance( ).getToken( request, ACTION_CREATE_TESTIDENTITY ) );
 
@@ -174,7 +175,8 @@ public class TestIdentityJspBean extends AbstractManageTesterJspBean <Integer, T
     /**
      * Process the data capture form of a new testidentity
      *
-     * @param request The Http Request
+     * @param request
+     *            The Http Request
      * @return The Jsp URL of the process result
      * @throws AccessDeniedException
      */
@@ -182,11 +184,10 @@ public class TestIdentityJspBean extends AbstractManageTesterJspBean <Integer, T
     public String doCreateTestIdentity( HttpServletRequest request ) throws AccessDeniedException
     {
         populate( _testidentity, request, getLocale( ) );
-        
 
         if ( !SecurityTokenService.getInstance( ).validate( request, ACTION_CREATE_TESTIDENTITY ) )
         {
-            throw new AccessDeniedException ( "Invalid security token" );
+            throw new AccessDeniedException( "Invalid security token" );
         }
 
         // Check constraints
@@ -196,17 +197,17 @@ public class TestIdentityJspBean extends AbstractManageTesterJspBean <Integer, T
         }
 
         TestIdentityHome.create( _testidentity );
-        addInfo( INFO_TESTIDENTITY_CREATED, getLocale(  ) );
+        addInfo( INFO_TESTIDENTITY_CREATED, getLocale( ) );
         resetListId( );
 
         return redirectView( request, VIEW_MANAGE_TESTIDENTITYS );
     }
 
     /**
-     * Manages the removal form of a testidentity whose identifier is in the http
-     * request
+     * Manages the removal form of a testidentity whose identifier is in the http request
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return the html code to confirm
      */
     @Action( ACTION_CONFIRM_REMOVE_TESTIDENTITY )
@@ -216,7 +217,7 @@ public class TestIdentityJspBean extends AbstractManageTesterJspBean <Integer, T
         UrlItem url = new UrlItem( getActionUrl( ACTION_REMOVE_TESTIDENTITY ) );
         url.addParameter( PARAMETER_ID_TESTIDENTITY, nId );
 
-        String strMessageUrl = AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_TESTIDENTITY, url.getUrl(  ), AdminMessage.TYPE_CONFIRMATION );
+        String strMessageUrl = AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_TESTIDENTITY, url.getUrl( ), AdminMessage.TYPE_CONFIRMATION );
 
         return redirect( request, strMessageUrl );
     }
@@ -224,17 +225,17 @@ public class TestIdentityJspBean extends AbstractManageTesterJspBean <Integer, T
     /**
      * Handles the removal form of a testidentity
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return the jsp URL to display the form to manage testidentitys
      */
     @Action( ACTION_REMOVE_TESTIDENTITY )
     public String doRemoveTestIdentity( HttpServletRequest request )
     {
         int nId = Integer.parseInt( request.getParameter( PARAMETER_ID_TESTIDENTITY ) );
-        
-        
+
         TestIdentityHome.remove( nId );
-        addInfo( INFO_TESTIDENTITY_REMOVED, getLocale(  ) );
+        addInfo( INFO_TESTIDENTITY_REMOVED, getLocale( ) );
         resetListId( );
 
         return redirectView( request, VIEW_MANAGE_TESTIDENTITYS );
@@ -243,7 +244,8 @@ public class TestIdentityJspBean extends AbstractManageTesterJspBean <Integer, T
     /**
      * Returns the form to update info about a testidentity
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return The HTML form to update info
      */
     @View( VIEW_MODIFY_TESTIDENTITY )
@@ -251,14 +253,13 @@ public class TestIdentityJspBean extends AbstractManageTesterJspBean <Integer, T
     {
         int nId = Integer.parseInt( request.getParameter( PARAMETER_ID_TESTIDENTITY ) );
 
-        if ( _testidentity == null || ( _testidentity.getId(  ) != nId ) )
+        if ( _testidentity == null || ( _testidentity.getId( ) != nId ) )
         {
             Optional<TestIdentity> optTestIdentity = TestIdentityHome.findByPrimaryKey( nId );
-            _testidentity = optTestIdentity.orElseThrow( ( ) -> new AppException(ERROR_RESOURCE_NOT_FOUND ) );
+            _testidentity = optTestIdentity.orElseThrow( ( ) -> new AppException( ERROR_RESOURCE_NOT_FOUND ) );
         }
 
-
-        Map<String, Object> model = getModel(  );
+        Map<String, Object> model = getModel( );
         model.put( MARK_TESTIDENTITY, _testidentity );
         model.put( SecurityTokenService.MARK_TOKEN, SecurityTokenService.getInstance( ).getToken( request, ACTION_MODIFY_TESTIDENTITY ) );
 
@@ -268,19 +269,19 @@ public class TestIdentityJspBean extends AbstractManageTesterJspBean <Integer, T
     /**
      * Process the change form of a testidentity
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return The Jsp URL of the process result
      * @throws AccessDeniedException
      */
     @Action( ACTION_MODIFY_TESTIDENTITY )
     public String doModifyTestIdentity( HttpServletRequest request ) throws AccessDeniedException
-    {   
+    {
         populate( _testidentity, request, getLocale( ) );
-		
-		
+
         if ( !SecurityTokenService.getInstance( ).validate( request, ACTION_MODIFY_TESTIDENTITY ) )
         {
-            throw new AccessDeniedException ( "Invalid security token" );
+            throw new AccessDeniedException( "Invalid security token" );
         }
 
         // Check constraints
@@ -290,7 +291,7 @@ public class TestIdentityJspBean extends AbstractManageTesterJspBean <Integer, T
         }
 
         TestIdentityHome.update( _testidentity );
-        addInfo( INFO_TESTIDENTITY_UPDATED, getLocale(  ) );
+        addInfo( INFO_TESTIDENTITY_UPDATED, getLocale( ) );
         resetListId( );
 
         return redirectView( request, VIEW_MANAGE_TESTIDENTITYS );

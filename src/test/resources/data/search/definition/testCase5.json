@@ -4,7 +4,7 @@
     "test": {
       "attributes": [
         {
-          "key": "email_login",
+          "key": "login",
           "value": "laurent.clement@paris.fr",
           "type": "string"
         }
@@ -35,7 +35,7 @@
             "type": "string"
           },
           {
-            "key": "email_login",
+            "key": "login",
             "value": "laurent.clement@paris.fr",
             "type": "string"
           }
@@ -65,7 +65,7 @@
             "type": "string"
           },
           {
-            "key": "email_login",
+            "key": "login",
             "value": "clement.laurent@paris.fr",
             "type": "string"
           }
@@ -97,7 +97,7 @@
             "type": "string"
           },
           {
-            "key": "email_login",
+            "key": "login",
             "value": "laurent.clement@paris.fr",
             "type": "string"
           }

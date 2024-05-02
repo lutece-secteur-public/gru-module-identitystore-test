@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2023, City of Paris
+ * Copyright (c) 2002-2024, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,14 +32,12 @@
  * License 1.0
  */
 
-
- package fr.paris.lutece.plugins.identitystore.modules.test.business;
+package fr.paris.lutece.plugins.identitystore.modules.test.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.util.ReferenceList;
-
 
 import java.util.List;
 import java.util.Optional;
@@ -56,14 +54,16 @@ public final class TestIdentityAttributeHome
     /**
      * Private constructor - this class need not be instantiated
      */
-    private TestIdentityAttributeHome(  )
+    private TestIdentityAttributeHome( )
     {
     }
 
     /**
      * Create an instance of the testIdentityAttribute class
-     * @param testIdentityAttribute The instance of the TestIdentityAttribute which contains the informations to store
-     * @return The  instance of testIdentityAttribute which has been created with its primary key.
+     * 
+     * @param testIdentityAttribute
+     *            The instance of the TestIdentityAttribute which contains the informations to store
+     * @return The instance of testIdentityAttribute which has been created with its primary key.
      */
     public static TestIdentityAttribute create( TestIdentityAttribute testIdentityAttribute )
     {
@@ -74,8 +74,10 @@ public final class TestIdentityAttributeHome
 
     /**
      * Update of the testIdentityAttribute which is specified in parameter
-     * @param testIdentityAttribute The instance of the TestIdentityAttribute which contains the data to store
-     * @return The instance of the  testIdentityAttribute which has been updated
+     * 
+     * @param testIdentityAttribute
+     *            The instance of the TestIdentityAttribute which contains the data to store
+     * @return The instance of the testIdentityAttribute which has been updated
      */
     public static TestIdentityAttribute update( TestIdentityAttribute testIdentityAttribute )
     {
@@ -86,7 +88,9 @@ public final class TestIdentityAttributeHome
 
     /**
      * Remove the testIdentityAttribute whose identifier is specified in parameter
-     * @param nKey The testIdentityAttribute Id
+     * 
+     * @param nKey
+     *            The testIdentityAttribute Id
      */
     public static void remove( int nKey )
     {
@@ -95,7 +99,9 @@ public final class TestIdentityAttributeHome
 
     /**
      * Returns an instance of a testIdentityAttribute whose identifier is specified in parameter
-     * @param nKey The testIdentityAttribute primary key
+     * 
+     * @param nKey
+     *            The testIdentityAttribute primary key
      * @return an instance of TestIdentityAttribute
      */
     public static Optional<TestIdentityAttribute> findByPrimaryKey( int nKey )
@@ -105,35 +111,39 @@ public final class TestIdentityAttributeHome
 
     /**
      * Load the data of all the testIdentityAttribute objects and returns them as a list
+     * 
      * @return the list which contains the data of all the testIdentityAttribute objects
      */
     public static List<TestIdentityAttribute> getTestIdentityAttributesList( )
     {
         return _dao.selectTestIdentityAttributesList( _plugin );
     }
-    
+
     /**
      * Load the id of all the testIdentityAttribute objects and returns them as a list
+     * 
      * @return the list which contains the id of all the testIdentityAttribute objects
      */
     public static List<Integer> getIdTestIdentityAttributesList( )
     {
         return _dao.selectIdTestIdentityAttributesList( _plugin );
     }
-    
+
     /**
      * Load the data of all the testIdentityAttribute objects and returns them as a referenceList
+     * 
      * @return the referenceList which contains the data of all the testIdentityAttribute objects
      */
     public static ReferenceList getTestIdentityAttributesReferenceList( )
     {
         return _dao.selectTestIdentityAttributesReferenceList( _plugin );
     }
-    
-	
+
     /**
      * Load the data of all the avant objects and returns them as a list
-     * @param listIds liste of ids
+     * 
+     * @param listIds
+     *            liste of ids
      * @return the list which contains the data of all the avant objects
      */
     public static List<TestIdentityAttribute> getTestIdentityAttributesListByIds( List<Integer> listIds )
@@ -142,4 +152,3 @@ public final class TestIdentityAttributeHome
     }
 
 }
-

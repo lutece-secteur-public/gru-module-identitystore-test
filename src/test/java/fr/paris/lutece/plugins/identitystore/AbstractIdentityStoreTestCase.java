@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2023, City of Paris
+ * Copyright (c) 2002-2024, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -67,7 +67,7 @@ public abstract class AbstractIdentityStoreTestCase extends LuteceTestCase
         this.startContainers( );
         this.preInitApplication( );
         this.initApplication( );
-        this.postInitApplication();
+        this.postInitApplication( );
         author = new RequestAuthor( );
         author.setType( AuthorType.application );
         author.setName( "Test unitaires" );
@@ -89,6 +89,7 @@ public abstract class AbstractIdentityStoreTestCase extends LuteceTestCase
     protected abstract void shutDownContainers( );
 
     protected abstract void preInitApplication( ) throws Exception;
+
     protected abstract void postInitApplication( ) throws Exception;
 
     protected void initApplication( ) throws Exception
@@ -125,7 +126,8 @@ public abstract class AbstractIdentityStoreTestCase extends LuteceTestCase
         _bInit = false;
     }
 
-    protected RequestAuthor getAuthor() {
+    protected RequestAuthor getAuthor( )
+    {
         return author;
     }
 }

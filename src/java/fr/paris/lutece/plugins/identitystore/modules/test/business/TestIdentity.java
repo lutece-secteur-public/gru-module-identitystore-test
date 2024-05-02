@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2023, City of Paris
+ * Copyright (c) 2002-2024, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,24 +34,26 @@
 package fr.paris.lutece.plugins.identitystore.modules.test.business;
 
 import java.io.Serializable;
+
 /**
  * This is the business class for the object TestIdentity
- */ 
+ */
 public class TestIdentity implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    // Variables declarations 
+    // Variables declarations
     private int _nId;
-    
+
     private String _strName;
-    
+
     private String _strCustomerId;
-    
+
     private String _strConnectionId;
 
     /**
      * Returns the Id
+     * 
      * @return The Id
      */
     public int getId( )
@@ -61,15 +63,18 @@ public class TestIdentity implements Serializable
 
     /**
      * Sets the Id
-     * @param nId The Id
-     */ 
+     * 
+     * @param nId
+     *            The Id
+     */
     public void setId( int nId )
     {
         _nId = nId;
     }
-    
+
     /**
      * Returns the Name
+     * 
      * @return The Name
      */
     public String getName( )
@@ -79,16 +84,18 @@ public class TestIdentity implements Serializable
 
     /**
      * Sets the Name
-     * @param strName The Name
-     */ 
+     * 
+     * @param strName
+     *            The Name
+     */
     public void setName( String strName )
     {
         _strName = strName;
     }
-    
-    
+
     /**
      * Returns the CustomerId
+     * 
      * @return The CustomerId
      */
     public String getCustomerId( )
@@ -98,16 +105,18 @@ public class TestIdentity implements Serializable
 
     /**
      * Sets the CustomerId
-     * @param strCustomerId The CustomerId
-     */ 
+     * 
+     * @param strCustomerId
+     *            The CustomerId
+     */
     public void setCustomerId( String strCustomerId )
     {
         _strCustomerId = strCustomerId;
     }
-    
-    
+
     /**
      * Returns the ConnectionId
+     * 
      * @return The ConnectionId
      */
     public String getConnectionId( )
@@ -117,11 +126,13 @@ public class TestIdentity implements Serializable
 
     /**
      * Sets the ConnectionId
-     * @param strConnectionId The ConnectionId
-     */ 
+     * 
+     * @param strConnectionId
+     *            The ConnectionId
+     */
     public void setConnectionId( String strConnectionId )
     {
         _strConnectionId = strConnectionId;
     }
-    
+
 }

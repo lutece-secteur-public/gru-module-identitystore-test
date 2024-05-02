@@ -34,7 +34,7 @@
           "type": "string"
         },
         {
-          "key": "email_login",
+          "key": "login",
           "value": "coline@yopmail.com",
           "type": "string"
         },
@@ -85,7 +85,7 @@
             "type": "string"
           },
           {
-            "key": "email_login",
+            "key": "login",
             "value": "coline@yopmail.com",
             "type": "string"
           },
@@ -135,7 +135,7 @@
             "type": "string"
           },
           {
-            "key": "email_login",
+            "key": "login",
             "value": "coline@yopmail.com",
             "type": "string"
           },
@@ -180,7 +180,7 @@
             "type": "string"
           },
           {
-            "key": "email_login",
+            "key": "login",
             "value": "coline@yopmail.com",
             "type": "string"
           },
@@ -225,7 +225,7 @@
             "type": "string"
           },
           {
-            "key": "email_login",
+            "key": "login",
             "value": "coline@yopmail.com",
             "type": "string"
           },
@@ -270,7 +270,7 @@
             "type": "string"
           },
           {
-            "key": "email_login",
+            "key": "login",
             "value": "coline@yopmail.com",
             "type": "string"
           },
@@ -367,7 +367,7 @@
             "type": "string"
           },
           {
-            "key": "email_login",
+            "key": "login",
             "value": "coline@yopmail.com",
             "type": "string"
           },
@@ -412,7 +412,7 @@
             "type": "string"
           },
           {
-            "key": "email_login",
+            "key": "login",
             "value": "coline@yopmail.com",
             "type": "string"
           },
@@ -457,7 +457,7 @@
             "type": "string"
           },
           {
-            "key": "email_login",
+            "key": "login",
             "value": "coline@yopmail.com",
             "type": "string"
           },
@@ -502,7 +502,7 @@
             "type": "string"
           },
           {
-            "key": "email_login",
+            "key": "login",
             "value": "coline@yopmail.com",
             "type": "string"
           },

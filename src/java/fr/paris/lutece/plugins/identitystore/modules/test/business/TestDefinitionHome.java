@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2023, City of Paris
+ * Copyright (c) 2002-2024, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,14 +32,12 @@
  * License 1.0
  */
 
-
- package fr.paris.lutece.plugins.identitystore.modules.test.business;
+package fr.paris.lutece.plugins.identitystore.modules.test.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.util.ReferenceList;
-
 
 import java.util.List;
 import java.util.Optional;
@@ -56,14 +54,16 @@ public final class TestDefinitionHome
     /**
      * Private constructor - this class need not be instantiated
      */
-    private TestDefinitionHome(  )
+    private TestDefinitionHome( )
     {
     }
 
     /**
      * Create an instance of the testDefinition class
-     * @param testDefinition The instance of the TestDefinition which contains the informations to store
-     * @return The  instance of testDefinition which has been created with its primary key.
+     * 
+     * @param testDefinition
+     *            The instance of the TestDefinition which contains the informations to store
+     * @return The instance of testDefinition which has been created with its primary key.
      */
     public static TestDefinition create( TestDefinition testDefinition )
     {
@@ -74,8 +74,10 @@ public final class TestDefinitionHome
 
     /**
      * Update of the testDefinition which is specified in parameter
-     * @param testDefinition The instance of the TestDefinition which contains the data to store
-     * @return The instance of the  testDefinition which has been updated
+     * 
+     * @param testDefinition
+     *            The instance of the TestDefinition which contains the data to store
+     * @return The instance of the testDefinition which has been updated
      */
     public static TestDefinition update( TestDefinition testDefinition )
     {
@@ -86,7 +88,9 @@ public final class TestDefinitionHome
 
     /**
      * Remove the testDefinition whose identifier is specified in parameter
-     * @param nKey The testDefinition Id
+     * 
+     * @param nKey
+     *            The testDefinition Id
      */
     public static void remove( int nKey )
     {
@@ -95,7 +99,9 @@ public final class TestDefinitionHome
 
     /**
      * Returns an instance of a testDefinition whose identifier is specified in parameter
-     * @param nKey The testDefinition primary key
+     * 
+     * @param nKey
+     *            The testDefinition primary key
      * @return an instance of TestDefinition
      */
     public static Optional<TestDefinition> findByPrimaryKey( int nKey )
@@ -105,35 +111,39 @@ public final class TestDefinitionHome
 
     /**
      * Load the data of all the testDefinition objects and returns them as a list
+     * 
      * @return the list which contains the data of all the testDefinition objects
      */
     public static List<TestDefinition> getTestDefinitionsList( )
     {
         return _dao.selectTestDefinitionsList( _plugin );
     }
-    
+
     /**
      * Load the id of all the testDefinition objects and returns them as a list
+     * 
      * @return the list which contains the id of all the testDefinition objects
      */
     public static List<Integer> getIdTestDefinitionsList( )
     {
         return _dao.selectIdTestDefinitionsList( _plugin );
     }
-    
+
     /**
      * Load the data of all the testDefinition objects and returns them as a referenceList
+     * 
      * @return the referenceList which contains the data of all the testDefinition objects
      */
     public static ReferenceList getTestDefinitionsReferenceList( )
     {
         return _dao.selectTestDefinitionsReferenceList( _plugin );
     }
-    
-	
+
     /**
      * Load the data of all the avant objects and returns them as a list
-     * @param listIds liste of ids
+     * 
+     * @param listIds
+     *            liste of ids
      * @return the list which contains the data of all the avant objects
      */
     public static List<TestDefinition> getTestDefinitionsListByIds( List<Integer> listIds )
@@ -142,4 +152,3 @@ public final class TestDefinitionHome
     }
 
 }
-

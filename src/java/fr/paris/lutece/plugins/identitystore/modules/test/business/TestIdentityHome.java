@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2023, City of Paris
+ * Copyright (c) 2002-2024, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,14 +32,12 @@
  * License 1.0
  */
 
-
- package fr.paris.lutece.plugins.identitystore.modules.test.business;
+package fr.paris.lutece.plugins.identitystore.modules.test.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.util.ReferenceList;
-
 
 import java.util.List;
 import java.util.Optional;
@@ -56,14 +54,16 @@ public final class TestIdentityHome
     /**
      * Private constructor - this class need not be instantiated
      */
-    private TestIdentityHome(  )
+    private TestIdentityHome( )
     {
     }
 
     /**
      * Create an instance of the testIdentity class
-     * @param testIdentity The instance of the TestIdentity which contains the informations to store
-     * @return The  instance of testIdentity which has been created with its primary key.
+     * 
+     * @param testIdentity
+     *            The instance of the TestIdentity which contains the informations to store
+     * @return The instance of testIdentity which has been created with its primary key.
      */
     public static TestIdentity create( TestIdentity testIdentity )
     {
@@ -74,8 +74,10 @@ public final class TestIdentityHome
 
     /**
      * Update of the testIdentity which is specified in parameter
-     * @param testIdentity The instance of the TestIdentity which contains the data to store
-     * @return The instance of the  testIdentity which has been updated
+     * 
+     * @param testIdentity
+     *            The instance of the TestIdentity which contains the data to store
+     * @return The instance of the testIdentity which has been updated
      */
     public static TestIdentity update( TestIdentity testIdentity )
     {
@@ -86,7 +88,9 @@ public final class TestIdentityHome
 
     /**
      * Remove the testIdentity whose identifier is specified in parameter
-     * @param nKey The testIdentity Id
+     * 
+     * @param nKey
+     *            The testIdentity Id
      */
     public static void remove( int nKey )
     {
@@ -95,7 +99,9 @@ public final class TestIdentityHome
 
     /**
      * Returns an instance of a testIdentity whose identifier is specified in parameter
-     * @param nKey The testIdentity primary key
+     * 
+     * @param nKey
+     *            The testIdentity primary key
      * @return an instance of TestIdentity
      */
     public static Optional<TestIdentity> findByPrimaryKey( int nKey )
@@ -105,35 +111,39 @@ public final class TestIdentityHome
 
     /**
      * Load the data of all the testIdentity objects and returns them as a list
+     * 
      * @return the list which contains the data of all the testIdentity objects
      */
     public static List<TestIdentity> getTestIdentitysList( )
     {
         return _dao.selectTestIdentitysList( _plugin );
     }
-    
+
     /**
      * Load the id of all the testIdentity objects and returns them as a list
+     * 
      * @return the list which contains the id of all the testIdentity objects
      */
     public static List<Integer> getIdTestIdentitysList( )
     {
         return _dao.selectIdTestIdentitysList( _plugin );
     }
-    
+
     /**
      * Load the data of all the testIdentity objects and returns them as a referenceList
+     * 
      * @return the referenceList which contains the data of all the testIdentity objects
      */
     public static ReferenceList getTestIdentitysReferenceList( )
     {
         return _dao.selectTestIdentitysReferenceList( _plugin );
     }
-    
-	
+
     /**
      * Load the data of all the avant objects and returns them as a list
-     * @param listIds liste of ids
+     * 
+     * @param listIds
+     *            liste of ids
      * @return the list which contains the data of all the avant objects
      */
     public static List<TestIdentity> getTestIdentitysListByIds( List<Integer> listIds )
@@ -142,4 +152,3 @@ public final class TestIdentityHome
     }
 
 }
-

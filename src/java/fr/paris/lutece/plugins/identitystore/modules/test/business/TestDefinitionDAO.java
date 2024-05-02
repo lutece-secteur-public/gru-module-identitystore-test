@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2023, City of Paris
+ * Copyright (c) 2002-2024, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,6 @@
  * License 1.0
  */
 
-
 package fr.paris.lutece.plugins.identitystore.modules.test.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
@@ -64,18 +63,18 @@ public final class TestDefinitionDAO implements ITestDefinitionDAO
     @Override
     public void insert( TestDefinition testDefinition, Plugin plugin )
     {
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, Statement.RETURN_GENERATED_KEYS, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, Statement.RETURN_GENERATED_KEYS, plugin ) )
         {
             int nIndex = 1;
-            daoUtil.setString( nIndex++ , testDefinition.getName( ) );
-            
+            daoUtil.setString( nIndex++, testDefinition.getName( ) );
+
             daoUtil.executeUpdate( );
-            if ( daoUtil.nextGeneratedKey( ) ) 
+            if ( daoUtil.nextGeneratedKey( ) )
             {
                 testDefinition.setId( daoUtil.getGeneratedKeyInt( 1 ) );
             }
         }
-        
+
     }
 
     /**
@@ -84,22 +83,22 @@ public final class TestDefinitionDAO implements ITestDefinitionDAO
     @Override
     public Optional<TestDefinition> load( int nKey, Plugin plugin )
     {
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
-	        daoUtil.setInt( 1 , nKey );
-	        daoUtil.executeQuery( );
-	        TestDefinition testDefinition = null;
-	
-	        if ( daoUtil.next( ) )
-	        {
-	            testDefinition = new TestDefinition();
-	            int nIndex = 1;
-	            
-	            testDefinition.setId( daoUtil.getInt( nIndex++ ) );
-			    testDefinition.setName( daoUtil.getString( nIndex ) );
-	        }
-	
-	        return Optional.ofNullable( testDefinition );
+            daoUtil.setInt( 1, nKey );
+            daoUtil.executeQuery( );
+            TestDefinition testDefinition = null;
+
+            if ( daoUtil.next( ) )
+            {
+                testDefinition = new TestDefinition( );
+                int nIndex = 1;
+
+                testDefinition.setId( daoUtil.getInt( nIndex++ ) );
+                testDefinition.setName( daoUtil.getString( nIndex ) );
+            }
+
+            return Optional.ofNullable( testDefinition );
         }
     }
 
@@ -109,10 +108,10 @@ public final class TestDefinitionDAO implements ITestDefinitionDAO
     @Override
     public void delete( int nKey, Plugin plugin )
     {
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
         {
-	        daoUtil.setInt( 1 , nKey );
-	        daoUtil.executeUpdate( );
+            daoUtil.setInt( 1, nKey );
+            daoUtil.executeUpdate( );
         }
     }
 
@@ -122,14 +121,14 @@ public final class TestDefinitionDAO implements ITestDefinitionDAO
     @Override
     public void store( TestDefinition testDefinition, Plugin plugin )
     {
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
         {
-	        int nIndex = 1;
-	        
-            	daoUtil.setString( nIndex++ , testDefinition.getName( ) );
-	        daoUtil.setInt( nIndex , testDefinition.getId( ) );
-	
-	        daoUtil.executeUpdate( );
+            int nIndex = 1;
+
+            daoUtil.setString( nIndex++, testDefinition.getName( ) );
+            daoUtil.setInt( nIndex, testDefinition.getId( ) );
+
+            daoUtil.executeUpdate( );
         }
     }
 
@@ -139,26 +138,26 @@ public final class TestDefinitionDAO implements ITestDefinitionDAO
     @Override
     public List<TestDefinition> selectTestDefinitionsList( Plugin plugin )
     {
-        List<TestDefinition> testDefinitionList = new ArrayList<>(  );
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
+        List<TestDefinition> testDefinitionList = new ArrayList<>( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-	        daoUtil.executeQuery(  );
-	
-	        while ( daoUtil.next(  ) )
-	        {
-	            TestDefinition testDefinition = new TestDefinition(  );
-	            int nIndex = 1;
-	            
-	            testDefinition.setId( daoUtil.getInt( nIndex++ ) );
-			    testDefinition.setName( daoUtil.getString( nIndex ) );
-	
-	            testDefinitionList.add( testDefinition );
-	        }
-	
-	        return testDefinitionList;
+            daoUtil.executeQuery( );
+
+            while ( daoUtil.next( ) )
+            {
+                TestDefinition testDefinition = new TestDefinition( );
+                int nIndex = 1;
+
+                testDefinition.setId( daoUtil.getInt( nIndex++ ) );
+                testDefinition.setName( daoUtil.getString( nIndex ) );
+
+                testDefinitionList.add( testDefinition );
+            }
+
+            return testDefinitionList;
         }
     }
-    
+
     /**
      * {@inheritDoc }
      */
@@ -166,82 +165,84 @@ public final class TestDefinitionDAO implements ITestDefinitionDAO
     public List<Integer> selectIdTestDefinitionsList( Plugin plugin )
     {
         List<Integer> testDefinitionList = new ArrayList<>( );
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_ID, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_ID, plugin ) )
         {
-	        daoUtil.executeQuery(  );
-	
-	        while ( daoUtil.next(  ) )
-	        {
-	            testDefinitionList.add( daoUtil.getInt( 1 ) );
-	        }
-	
-	        return testDefinitionList;
+            daoUtil.executeQuery( );
+
+            while ( daoUtil.next( ) )
+            {
+                testDefinitionList.add( daoUtil.getInt( 1 ) );
+            }
+
+            return testDefinitionList;
         }
     }
-    
+
     /**
      * {@inheritDoc }
      */
     @Override
     public ReferenceList selectTestDefinitionsReferenceList( Plugin plugin )
     {
-        ReferenceList testDefinitionList = new ReferenceList();
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
+        ReferenceList testDefinitionList = new ReferenceList( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-	        daoUtil.executeQuery(  );
-	
-	        while ( daoUtil.next(  ) )
-	        {
-	            testDefinitionList.addItem( daoUtil.getInt( 1 ) , daoUtil.getString( 2 ) );
-	        }
-	
-	        return testDefinitionList;
-    	}
+            daoUtil.executeQuery( );
+
+            while ( daoUtil.next( ) )
+            {
+                testDefinitionList.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) );
+            }
+
+            return testDefinitionList;
+        }
     }
-    
+
     /**
      * {@inheritDoc }
      */
-	@Override
-	public List<TestDefinition> selectTestDefinitionsListByIds( Plugin plugin, List<Integer> listIds ) {
-		List<TestDefinition> testDefinitionList = new ArrayList<>(  );
-		
-		StringBuilder builder = new StringBuilder( );
+    @Override
+    public List<TestDefinition> selectTestDefinitionsListByIds( Plugin plugin, List<Integer> listIds )
+    {
+        List<TestDefinition> testDefinitionList = new ArrayList<>( );
 
-		if ( !listIds.isEmpty( ) )
-		{
-			for( int i = 0 ; i < listIds.size(); i++ ) {
-			    builder.append( "?," );
-			}
-	
-			String placeHolders =  builder.deleteCharAt( builder.length( ) -1 ).toString( );
-			String stmt = SQL_QUERY_SELECTALL_BY_IDS + placeHolders + ")";
-			
-			
-	        try ( DAOUtil daoUtil = new DAOUtil( stmt, plugin ) )
-	        {
-	        	int index = 1;
-				for( Integer n : listIds ) {
-					daoUtil.setInt(  index++, n ); 
-				}
-	        	
-	        	daoUtil.executeQuery(  );
-	        	while ( daoUtil.next(  ) )
-		        {
-		        	TestDefinition testDefinition = new TestDefinition(  );
-		            int nIndex = 1;
-		            
-		            testDefinition.setId( daoUtil.getInt( nIndex++ ) );
-				    testDefinition.setName( daoUtil.getString( nIndex ) );
-		            
-		            testDefinitionList.add( testDefinition );
-		        }
-		
-		        daoUtil.free( );
-		        
-	        }
-	    }
-		return testDefinitionList;
-		
-	}
+        StringBuilder builder = new StringBuilder( );
+
+        if ( !listIds.isEmpty( ) )
+        {
+            for ( int i = 0; i < listIds.size( ); i++ )
+            {
+                builder.append( "?," );
+            }
+
+            String placeHolders = builder.deleteCharAt( builder.length( ) - 1 ).toString( );
+            String stmt = SQL_QUERY_SELECTALL_BY_IDS + placeHolders + ")";
+
+            try ( DAOUtil daoUtil = new DAOUtil( stmt, plugin ) )
+            {
+                int index = 1;
+                for ( Integer n : listIds )
+                {
+                    daoUtil.setInt( index++, n );
+                }
+
+                daoUtil.executeQuery( );
+                while ( daoUtil.next( ) )
+                {
+                    TestDefinition testDefinition = new TestDefinition( );
+                    int nIndex = 1;
+
+                    testDefinition.setId( daoUtil.getInt( nIndex++ ) );
+                    testDefinition.setName( daoUtil.getString( nIndex ) );
+
+                    testDefinitionList.add( testDefinition );
+                }
+
+                daoUtil.free( );
+
+            }
+        }
+        return testDefinitionList;
+
+    }
 }

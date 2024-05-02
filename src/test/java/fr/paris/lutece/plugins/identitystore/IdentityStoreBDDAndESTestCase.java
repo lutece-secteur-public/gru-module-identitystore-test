@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2023, City of Paris
+ * Copyright (c) 2002-2024, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,16 +81,17 @@ public abstract class IdentityStoreBDDAndESTestCase extends AbstractIdentityStor
     }
 
     @Override
-    protected void preInitApplication() throws Exception {
-        //do nothing
+    protected void preInitApplication( ) throws Exception
+    {
+        // do nothing
     }
 
     @Override
     protected void postInitApplication( ) throws Exception
     {
         // Init elastic index
-        final IdentityIndexer identityIndexer = new IdentityIndexer("http://" + this.esUrl);
-        identityIndexer.initIndex(CURRENT_INDEX);
+        final IdentityIndexer identityIndexer = new IdentityIndexer( "http://" + this.esUrl );
+        identityIndexer.initIndex( CURRENT_INDEX );
         identityIndexer.addAliasOnIndex( CURRENT_INDEX, CURRENT_INDEX_ALIAS );
     }
 }

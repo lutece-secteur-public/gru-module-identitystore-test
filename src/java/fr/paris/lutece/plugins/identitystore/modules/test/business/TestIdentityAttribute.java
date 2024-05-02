@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2023, City of Paris
+ * Copyright (c) 2002-2024, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,30 +37,32 @@ import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.sql.Date;
 import javax.validation.constraints.NotNull;
+
 /**
  * This is the business class for the object TestIdentityAttribute
- */ 
+ */
 public class TestIdentityAttribute implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    // Variables declarations 
+    // Variables declarations
     private int _nId;
-    
+
     @NotEmpty( message = "#i18n{module.identitystore.test.validation.testidentityattribute.Key.notEmpty}" )
     private String _strKey;
-    
+
     @NotEmpty( message = "#i18n{module.identitystore.test.validation.testidentityattribute.Value.notEmpty}" )
     private String _strValue;
-    
+
     private String _strCertifier;
     @NotNull( message = "#i18n{portal.validation.message.notEmpty}" )
     private Date _dateCertificationDate;
-    
+
     private int _nCertificationLevel;
 
     /**
      * Returns the Id
+     * 
      * @return The Id
      */
     public int getId( )
@@ -70,15 +72,18 @@ public class TestIdentityAttribute implements Serializable
 
     /**
      * Sets the Id
-     * @param nId The Id
-     */ 
+     * 
+     * @param nId
+     *            The Id
+     */
     public void setId( int nId )
     {
         _nId = nId;
     }
-    
+
     /**
      * Returns the Key
+     * 
      * @return The Key
      */
     public String getKey( )
@@ -88,16 +93,18 @@ public class TestIdentityAttribute implements Serializable
 
     /**
      * Sets the Key
-     * @param strKey The Key
-     */ 
+     * 
+     * @param strKey
+     *            The Key
+     */
     public void setKey( String strKey )
     {
         _strKey = strKey;
     }
-    
-    
+
     /**
      * Returns the Value
+     * 
      * @return The Value
      */
     public String getValue( )
@@ -107,16 +114,18 @@ public class TestIdentityAttribute implements Serializable
 
     /**
      * Sets the Value
-     * @param strValue The Value
-     */ 
+     * 
+     * @param strValue
+     *            The Value
+     */
     public void setValue( String strValue )
     {
         _strValue = strValue;
     }
-    
-    
+
     /**
      * Returns the Certifier
+     * 
      * @return The Certifier
      */
     public String getCertifier( )
@@ -126,16 +135,18 @@ public class TestIdentityAttribute implements Serializable
 
     /**
      * Sets the Certifier
-     * @param strCertifier The Certifier
-     */ 
+     * 
+     * @param strCertifier
+     *            The Certifier
+     */
     public void setCertifier( String strCertifier )
     {
         _strCertifier = strCertifier;
     }
-    
-    
+
     /**
      * Returns the CertificationDate
+     * 
      * @return The CertificationDate
      */
     public Date getCertificationDate( )
@@ -145,16 +156,18 @@ public class TestIdentityAttribute implements Serializable
 
     /**
      * Sets the CertificationDate
-     * @param dateCertificationDate The CertificationDate
-     */ 
+     * 
+     * @param dateCertificationDate
+     *            The CertificationDate
+     */
     public void setCertificationDate( Date dateCertificationDate )
     {
         _dateCertificationDate = dateCertificationDate;
     }
-    
-    
+
     /**
      * Returns the CertificationLevel
+     * 
      * @return The CertificationLevel
      */
     public int getCertificationLevel( )
@@ -164,11 +177,13 @@ public class TestIdentityAttribute implements Serializable
 
     /**
      * Sets the CertificationLevel
-     * @param nCertificationLevel The CertificationLevel
-     */ 
+     * 
+     * @param nCertificationLevel
+     *            The CertificationLevel
+     */
     public void setCertificationLevel( int nCertificationLevel )
     {
         _nCertificationLevel = nCertificationLevel;
     }
-    
+
 }

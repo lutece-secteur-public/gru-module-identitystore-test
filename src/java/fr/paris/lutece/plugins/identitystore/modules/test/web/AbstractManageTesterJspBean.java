@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2023, City of Paris
+ * Copyright (c) 2002-2024, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,6 @@
  *
  * License 1.0
  */
- 
 package fr.paris.lutece.plugins.identitystore.modules.test.web;
 
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
@@ -47,64 +46,71 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * ManageTester JSP Bean abstract class for JSP Bean
  */
-public abstract class AbstractManageTesterJspBean <S, T> extends MVCAdminJspBean
+public abstract class AbstractManageTesterJspBean<S, T> extends MVCAdminJspBean
 {
     // Rights
     public static final String RIGHT_MANAGETEST = "IDENTITYSTORE_TEST_MANAGEMENT";
-    
+
     // Properties
     private static final String PROPERTY_DEFAULT_LIST_ITEM_PER_PAGE = "identitystore-test.listItems.itemsPerPage";
-    
+
     // Parameters
     private static final String PARAMETER_PAGE_INDEX = "page_index";
-    
+
     // Markers
     private static final String MARK_PAGINATOR = "paginator";
     private static final String MARK_NB_ITEMS_PER_PAGE = "nb_items_per_page";
 
-    //Variables
+    // Variables
     private String _strCurrentPageIndex;
     private int _nItemsPerPage;
 
     /**
      * Return a model that contains the list and paginator infos
-     * @param request The HTTP request
-     * @param strBookmark The bookmark
-     * @param list The list of item
-     * @param strManageJsp The JSP
+     * 
+     * @param request
+     *            The HTTP request
+     * @param strBookmark
+     *            The bookmark
+     * @param list
+     *            The list of item
+     * @param strManageJsp
+     *            The JSP
      * @return The model
      */
-    protected <T> Map<String, Object> getPaginatedListModel( HttpServletRequest request, String strBookmark, List<S> list,
-        String strManageJsp )
+    protected <T> Map<String, Object> getPaginatedListModel( HttpServletRequest request, String strBookmark, List<S> list, String strManageJsp )
     {
         int nDefaultItemsPerPage = AppPropertiesService.getPropertyInt( PROPERTY_DEFAULT_LIST_ITEM_PER_PAGE, 50 );
         _strCurrentPageIndex = AbstractPaginator.getPageIndex( request, AbstractPaginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
         _nItemsPerPage = AbstractPaginator.getItemsPerPage( request, AbstractPaginator.PARAMETER_ITEMS_PER_PAGE, _nItemsPerPage, nDefaultItemsPerPage );
 
         UrlItem url = new UrlItem( strManageJsp );
-        String strUrl = url.getUrl(  );
+        String strUrl = url.getUrl( );
 
         // PAGINATOR
-        LocalizedPaginator<S> paginator = new LocalizedPaginator<>( list, _nItemsPerPage, strUrl, PARAMETER_PAGE_INDEX, _strCurrentPageIndex, getLocale(  ) );
+        LocalizedPaginator<S> paginator = new LocalizedPaginator<>( list, _nItemsPerPage, strUrl, PARAMETER_PAGE_INDEX, _strCurrentPageIndex, getLocale( ) );
 
-        Map<String, Object> model = getModel(  );
+        Map<String, Object> model = getModel( );
 
         model.put( MARK_NB_ITEMS_PER_PAGE, String.valueOf( _nItemsPerPage ) );
         model.put( MARK_PAGINATOR, paginator );
-        model.put( strBookmark, getItemsFromIds ( paginator.getPageItems( ) ) );
+        model.put( strBookmark, getItemsFromIds( paginator.getPageItems( ) ) );
 
         return model;
     }
-    
+
     /**
      * Get Items from Ids list
+     * 
      * @param <T>
      *
-     * @param <S> the generic type of the Ids
-     * @param <T> the generic type of the items
+     * @param <S>
+     *            the generic type of the Ids
+     * @param <T>
+     *            the generic type of the items
      * @param <S>
      * @param listIds
      * @return the populated list of items corresponding to the id List
      */
-     abstract  List<T> getItemsFromIds ( List<S> listIds ) ;
+    abstract List<T> getItemsFromIds( List<S> listIds );
 }

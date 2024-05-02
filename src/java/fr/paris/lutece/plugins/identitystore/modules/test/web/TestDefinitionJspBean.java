@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2023, City of Paris
+ * Copyright (c) 2002-2024, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,6 @@
  *
  * License 1.0
  */
- 
 package fr.paris.lutece.plugins.identitystore.modules.test.web;
 
 import fr.paris.lutece.portal.service.message.AdminMessage;
@@ -59,7 +58,7 @@ import fr.paris.lutece.plugins.identitystore.modules.test.business.TestDefinitio
  * This class provides the user interface to manage TestDefinition features ( manage, create, modify, remove )
  */
 @Controller( controllerJsp = "ManageTestDefinitions.jsp", controllerPath = "jsp/admin/plugins/identitystore/modules/test/", right = "IDENTITYSTORE_TEST_MANAGEMENT" )
-public class TestDefinitionJspBean extends AbstractManageTesterJspBean <Integer, TestDefinition>
+public class TestDefinitionJspBean extends AbstractManageTesterJspBean<Integer, TestDefinition>
 {
     // Templates
     private static final String TEMPLATE_MANAGE_TESTDEFINITIONS = "/admin/plugins/identitystore/modules/test/manage_testdefinitions.html";
@@ -101,70 +100,72 @@ public class TestDefinitionJspBean extends AbstractManageTesterJspBean <Integer,
     private static final String INFO_TESTDEFINITION_CREATED = "module.identitystore.test.info.testdefinition.created";
     private static final String INFO_TESTDEFINITION_UPDATED = "module.identitystore.test.info.testdefinition.updated";
     private static final String INFO_TESTDEFINITION_REMOVED = "module.identitystore.test.info.testdefinition.removed";
-    
+
     // Errors
     private static final String ERROR_RESOURCE_NOT_FOUND = "Resource not found";
-    
+
     // Session variable to store working values
     private TestDefinition _testdefinition;
     private List<Integer> _listIdTestDefinitions;
-    
+
     /**
      * Build the Manage View
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return The page
      */
     @View( value = VIEW_MANAGE_TESTDEFINITIONS, defaultView = true )
     public String getManageTestDefinitions( HttpServletRequest request )
     {
         _testdefinition = null;
-        
-        if ( request.getParameter( AbstractPaginator.PARAMETER_PAGE_INDEX) == null || _listIdTestDefinitions.isEmpty( ) )
+
+        if ( request.getParameter( AbstractPaginator.PARAMETER_PAGE_INDEX ) == null || _listIdTestDefinitions.isEmpty( ) )
         {
-        	_listIdTestDefinitions = TestDefinitionHome.getIdTestDefinitionsList(  );
+            _listIdTestDefinitions = TestDefinitionHome.getIdTestDefinitionsList( );
         }
-        
+
         Map<String, Object> model = getPaginatedListModel( request, MARK_TESTDEFINITION_LIST, _listIdTestDefinitions, JSP_MANAGE_TESTDEFINITIONS );
 
         return getPage( PROPERTY_PAGE_TITLE_MANAGE_TESTDEFINITIONS, TEMPLATE_MANAGE_TESTDEFINITIONS, model );
     }
 
-	/**
+    /**
      * Get Items from Ids list
+     * 
      * @param listIds
      * @return the populated list of items corresponding to the id List
      */
-	@Override
-	List<TestDefinition> getItemsFromIds( List<Integer> listIds ) 
-	{
-		List<TestDefinition> listTestDefinition = TestDefinitionHome.getTestDefinitionsListByIds( listIds );
-		
-		// keep original order
-        return listTestDefinition.stream()
-                 .sorted(Comparator.comparingInt( notif -> listIds.indexOf( notif.getId())))
-                 .collect(Collectors.toList());
-	}
-    
+    @Override
+    List<TestDefinition> getItemsFromIds( List<Integer> listIds )
+    {
+        List<TestDefinition> listTestDefinition = TestDefinitionHome.getTestDefinitionsListByIds( listIds );
+
+        // keep original order
+        return listTestDefinition.stream( ).sorted( Comparator.comparingInt( notif -> listIds.indexOf( notif.getId( ) ) ) ).collect( Collectors.toList( ) );
+    }
+
     /**
-    * reset the _listIdTestDefinitions list
-    */
+     * reset the _listIdTestDefinitions list
+     */
     public void resetListId( )
     {
-    	_listIdTestDefinitions = new ArrayList<>( );
+        _listIdTestDefinitions = new ArrayList<>( );
     }
 
     /**
      * Returns the form to create a testdefinition
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return the html code of the testdefinition form
      */
     @View( VIEW_CREATE_TESTDEFINITION )
     public String getCreateTestDefinition( HttpServletRequest request )
     {
-        _testdefinition = ( _testdefinition != null ) ? _testdefinition : new TestDefinition(  );
+        _testdefinition = ( _testdefinition != null ) ? _testdefinition : new TestDefinition( );
 
-        Map<String, Object> model = getModel(  );
+        Map<String, Object> model = getModel( );
         model.put( MARK_TESTDEFINITION, _testdefinition );
         model.put( SecurityTokenService.MARK_TOKEN, SecurityTokenService.getInstance( ).getToken( request, ACTION_CREATE_TESTDEFINITION ) );
 
@@ -174,7 +175,8 @@ public class TestDefinitionJspBean extends AbstractManageTesterJspBean <Integer,
     /**
      * Process the data capture form of a new testdefinition
      *
-     * @param request The Http Request
+     * @param request
+     *            The Http Request
      * @return The Jsp URL of the process result
      * @throws AccessDeniedException
      */
@@ -182,11 +184,10 @@ public class TestDefinitionJspBean extends AbstractManageTesterJspBean <Integer,
     public String doCreateTestDefinition( HttpServletRequest request ) throws AccessDeniedException
     {
         populate( _testdefinition, request, getLocale( ) );
-        
 
         if ( !SecurityTokenService.getInstance( ).validate( request, ACTION_CREATE_TESTDEFINITION ) )
         {
-            throw new AccessDeniedException ( "Invalid security token" );
+            throw new AccessDeniedException( "Invalid security token" );
         }
 
         // Check constraints
@@ -196,17 +197,17 @@ public class TestDefinitionJspBean extends AbstractManageTesterJspBean <Integer,
         }
 
         TestDefinitionHome.create( _testdefinition );
-        addInfo( INFO_TESTDEFINITION_CREATED, getLocale(  ) );
+        addInfo( INFO_TESTDEFINITION_CREATED, getLocale( ) );
         resetListId( );
 
         return redirectView( request, VIEW_MANAGE_TESTDEFINITIONS );
     }
 
     /**
-     * Manages the removal form of a testdefinition whose identifier is in the http
-     * request
+     * Manages the removal form of a testdefinition whose identifier is in the http request
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return the html code to confirm
      */
     @Action( ACTION_CONFIRM_REMOVE_TESTDEFINITION )
@@ -216,7 +217,8 @@ public class TestDefinitionJspBean extends AbstractManageTesterJspBean <Integer,
         UrlItem url = new UrlItem( getActionUrl( ACTION_REMOVE_TESTDEFINITION ) );
         url.addParameter( PARAMETER_ID_TESTDEFINITION, nId );
 
-        String strMessageUrl = AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_TESTDEFINITION, url.getUrl(  ), AdminMessage.TYPE_CONFIRMATION );
+        String strMessageUrl = AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_TESTDEFINITION, url.getUrl( ),
+                AdminMessage.TYPE_CONFIRMATION );
 
         return redirect( request, strMessageUrl );
     }
@@ -224,17 +226,17 @@ public class TestDefinitionJspBean extends AbstractManageTesterJspBean <Integer,
     /**
      * Handles the removal form of a testdefinition
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return the jsp URL to display the form to manage testdefinitions
      */
     @Action( ACTION_REMOVE_TESTDEFINITION )
     public String doRemoveTestDefinition( HttpServletRequest request )
     {
         int nId = Integer.parseInt( request.getParameter( PARAMETER_ID_TESTDEFINITION ) );
-        
-        
+
         TestDefinitionHome.remove( nId );
-        addInfo( INFO_TESTDEFINITION_REMOVED, getLocale(  ) );
+        addInfo( INFO_TESTDEFINITION_REMOVED, getLocale( ) );
         resetListId( );
 
         return redirectView( request, VIEW_MANAGE_TESTDEFINITIONS );
@@ -243,7 +245,8 @@ public class TestDefinitionJspBean extends AbstractManageTesterJspBean <Integer,
     /**
      * Returns the form to update info about a testdefinition
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return The HTML form to update info
      */
     @View( VIEW_MODIFY_TESTDEFINITION )
@@ -251,14 +254,13 @@ public class TestDefinitionJspBean extends AbstractManageTesterJspBean <Integer,
     {
         int nId = Integer.parseInt( request.getParameter( PARAMETER_ID_TESTDEFINITION ) );
 
-        if ( _testdefinition == null || ( _testdefinition.getId(  ) != nId ) )
+        if ( _testdefinition == null || ( _testdefinition.getId( ) != nId ) )
         {
             Optional<TestDefinition> optTestDefinition = TestDefinitionHome.findByPrimaryKey( nId );
-            _testdefinition = optTestDefinition.orElseThrow( ( ) -> new AppException(ERROR_RESOURCE_NOT_FOUND ) );
+            _testdefinition = optTestDefinition.orElseThrow( ( ) -> new AppException( ERROR_RESOURCE_NOT_FOUND ) );
         }
 
-
-        Map<String, Object> model = getModel(  );
+        Map<String, Object> model = getModel( );
         model.put( MARK_TESTDEFINITION, _testdefinition );
         model.put( SecurityTokenService.MARK_TOKEN, SecurityTokenService.getInstance( ).getToken( request, ACTION_MODIFY_TESTDEFINITION ) );
 
@@ -268,19 +270,19 @@ public class TestDefinitionJspBean extends AbstractManageTesterJspBean <Integer,
     /**
      * Process the change form of a testdefinition
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return The Jsp URL of the process result
      * @throws AccessDeniedException
      */
     @Action( ACTION_MODIFY_TESTDEFINITION )
     public String doModifyTestDefinition( HttpServletRequest request ) throws AccessDeniedException
-    {   
+    {
         populate( _testdefinition, request, getLocale( ) );
-		
-		
+
         if ( !SecurityTokenService.getInstance( ).validate( request, ACTION_MODIFY_TESTDEFINITION ) )
         {
-            throw new AccessDeniedException ( "Invalid security token" );
+            throw new AccessDeniedException( "Invalid security token" );
         }
 
         // Check constraints
@@ -290,7 +292,7 @@ public class TestDefinitionJspBean extends AbstractManageTesterJspBean <Integer,
         }
 
         TestDefinitionHome.update( _testdefinition );
-        addInfo( INFO_TESTDEFINITION_UPDATED, getLocale(  ) );
+        addInfo( INFO_TESTDEFINITION_UPDATED, getLocale( ) );
         resetListId( );
 
         return redirectView( request, VIEW_MANAGE_TESTDEFINITIONS );

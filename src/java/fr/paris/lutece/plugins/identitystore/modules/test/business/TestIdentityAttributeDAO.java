@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2023, City of Paris
+ * Copyright (c) 2002-2024, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,6 @@
  * License 1.0
  */
 
-
 package fr.paris.lutece.plugins.identitystore.modules.test.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
@@ -64,22 +63,22 @@ public final class TestIdentityAttributeDAO implements ITestIdentityAttributeDAO
     @Override
     public void insert( TestIdentityAttribute testIdentityAttribute, Plugin plugin )
     {
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, Statement.RETURN_GENERATED_KEYS, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, Statement.RETURN_GENERATED_KEYS, plugin ) )
         {
             int nIndex = 1;
-            daoUtil.setString( nIndex++ , testIdentityAttribute.getKey( ) );
-            daoUtil.setString( nIndex++ , testIdentityAttribute.getValue( ) );
-            daoUtil.setString( nIndex++ , testIdentityAttribute.getCertifier( ) );
-            daoUtil.setDate( nIndex++ , testIdentityAttribute.getCertificationDate( ) );
-            daoUtil.setInt( nIndex++ , testIdentityAttribute.getCertificationLevel( ) );
-            
+            daoUtil.setString( nIndex++, testIdentityAttribute.getKey( ) );
+            daoUtil.setString( nIndex++, testIdentityAttribute.getValue( ) );
+            daoUtil.setString( nIndex++, testIdentityAttribute.getCertifier( ) );
+            daoUtil.setDate( nIndex++, testIdentityAttribute.getCertificationDate( ) );
+            daoUtil.setInt( nIndex++, testIdentityAttribute.getCertificationLevel( ) );
+
             daoUtil.executeUpdate( );
-            if ( daoUtil.nextGeneratedKey( ) ) 
+            if ( daoUtil.nextGeneratedKey( ) )
             {
                 testIdentityAttribute.setId( daoUtil.getGeneratedKeyInt( 1 ) );
             }
         }
-        
+
     }
 
     /**
@@ -88,26 +87,26 @@ public final class TestIdentityAttributeDAO implements ITestIdentityAttributeDAO
     @Override
     public Optional<TestIdentityAttribute> load( int nKey, Plugin plugin )
     {
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
-	        daoUtil.setInt( 1 , nKey );
-	        daoUtil.executeQuery( );
-	        TestIdentityAttribute testIdentityAttribute = null;
-	
-	        if ( daoUtil.next( ) )
-	        {
-	            testIdentityAttribute = new TestIdentityAttribute();
-	            int nIndex = 1;
-	            
-	            testIdentityAttribute.setId( daoUtil.getInt( nIndex++ ) );
-			    testIdentityAttribute.setKey( daoUtil.getString( nIndex++ ) );
-			    testIdentityAttribute.setValue( daoUtil.getString( nIndex++ ) );
-			    testIdentityAttribute.setCertifier( daoUtil.getString( nIndex++ ) );
-			    testIdentityAttribute.setCertificationDate( daoUtil.getDate( nIndex++ ) );
-			    testIdentityAttribute.setCertificationLevel( daoUtil.getInt( nIndex ) );
-	        }
-	
-	        return Optional.ofNullable( testIdentityAttribute );
+            daoUtil.setInt( 1, nKey );
+            daoUtil.executeQuery( );
+            TestIdentityAttribute testIdentityAttribute = null;
+
+            if ( daoUtil.next( ) )
+            {
+                testIdentityAttribute = new TestIdentityAttribute( );
+                int nIndex = 1;
+
+                testIdentityAttribute.setId( daoUtil.getInt( nIndex++ ) );
+                testIdentityAttribute.setKey( daoUtil.getString( nIndex++ ) );
+                testIdentityAttribute.setValue( daoUtil.getString( nIndex++ ) );
+                testIdentityAttribute.setCertifier( daoUtil.getString( nIndex++ ) );
+                testIdentityAttribute.setCertificationDate( daoUtil.getDate( nIndex++ ) );
+                testIdentityAttribute.setCertificationLevel( daoUtil.getInt( nIndex ) );
+            }
+
+            return Optional.ofNullable( testIdentityAttribute );
         }
     }
 
@@ -117,10 +116,10 @@ public final class TestIdentityAttributeDAO implements ITestIdentityAttributeDAO
     @Override
     public void delete( int nKey, Plugin plugin )
     {
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
         {
-	        daoUtil.setInt( 1 , nKey );
-	        daoUtil.executeUpdate( );
+            daoUtil.setInt( 1, nKey );
+            daoUtil.executeUpdate( );
         }
     }
 
@@ -130,18 +129,18 @@ public final class TestIdentityAttributeDAO implements ITestIdentityAttributeDAO
     @Override
     public void store( TestIdentityAttribute testIdentityAttribute, Plugin plugin )
     {
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
         {
-	        int nIndex = 1;
-	        
-            	daoUtil.setString( nIndex++ , testIdentityAttribute.getKey( ) );
-            	daoUtil.setString( nIndex++ , testIdentityAttribute.getValue( ) );
-            	daoUtil.setString( nIndex++ , testIdentityAttribute.getCertifier( ) );
-            	daoUtil.setDate( nIndex++ , testIdentityAttribute.getCertificationDate( ) );
-            	daoUtil.setInt( nIndex++ , testIdentityAttribute.getCertificationLevel( ) );
-	        daoUtil.setInt( nIndex , testIdentityAttribute.getId( ) );
-	
-	        daoUtil.executeUpdate( );
+            int nIndex = 1;
+
+            daoUtil.setString( nIndex++, testIdentityAttribute.getKey( ) );
+            daoUtil.setString( nIndex++, testIdentityAttribute.getValue( ) );
+            daoUtil.setString( nIndex++, testIdentityAttribute.getCertifier( ) );
+            daoUtil.setDate( nIndex++, testIdentityAttribute.getCertificationDate( ) );
+            daoUtil.setInt( nIndex++, testIdentityAttribute.getCertificationLevel( ) );
+            daoUtil.setInt( nIndex, testIdentityAttribute.getId( ) );
+
+            daoUtil.executeUpdate( );
         }
     }
 
@@ -151,30 +150,30 @@ public final class TestIdentityAttributeDAO implements ITestIdentityAttributeDAO
     @Override
     public List<TestIdentityAttribute> selectTestIdentityAttributesList( Plugin plugin )
     {
-        List<TestIdentityAttribute> testIdentityAttributeList = new ArrayList<>(  );
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
+        List<TestIdentityAttribute> testIdentityAttributeList = new ArrayList<>( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-	        daoUtil.executeQuery(  );
-	
-	        while ( daoUtil.next(  ) )
-	        {
-	            TestIdentityAttribute testIdentityAttribute = new TestIdentityAttribute(  );
-	            int nIndex = 1;
-	            
-	            testIdentityAttribute.setId( daoUtil.getInt( nIndex++ ) );
-			    testIdentityAttribute.setKey( daoUtil.getString( nIndex++ ) );
-			    testIdentityAttribute.setValue( daoUtil.getString( nIndex++ ) );
-			    testIdentityAttribute.setCertifier( daoUtil.getString( nIndex++ ) );
-			    testIdentityAttribute.setCertificationDate( daoUtil.getDate( nIndex++ ) );
-			    testIdentityAttribute.setCertificationLevel( daoUtil.getInt( nIndex ) );
-	
-	            testIdentityAttributeList.add( testIdentityAttribute );
-	        }
-	
-	        return testIdentityAttributeList;
+            daoUtil.executeQuery( );
+
+            while ( daoUtil.next( ) )
+            {
+                TestIdentityAttribute testIdentityAttribute = new TestIdentityAttribute( );
+                int nIndex = 1;
+
+                testIdentityAttribute.setId( daoUtil.getInt( nIndex++ ) );
+                testIdentityAttribute.setKey( daoUtil.getString( nIndex++ ) );
+                testIdentityAttribute.setValue( daoUtil.getString( nIndex++ ) );
+                testIdentityAttribute.setCertifier( daoUtil.getString( nIndex++ ) );
+                testIdentityAttribute.setCertificationDate( daoUtil.getDate( nIndex++ ) );
+                testIdentityAttribute.setCertificationLevel( daoUtil.getInt( nIndex ) );
+
+                testIdentityAttributeList.add( testIdentityAttribute );
+            }
+
+            return testIdentityAttributeList;
         }
     }
-    
+
     /**
      * {@inheritDoc }
      */
@@ -182,86 +181,88 @@ public final class TestIdentityAttributeDAO implements ITestIdentityAttributeDAO
     public List<Integer> selectIdTestIdentityAttributesList( Plugin plugin )
     {
         List<Integer> testIdentityAttributeList = new ArrayList<>( );
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_ID, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_ID, plugin ) )
         {
-	        daoUtil.executeQuery(  );
-	
-	        while ( daoUtil.next(  ) )
-	        {
-	            testIdentityAttributeList.add( daoUtil.getInt( 1 ) );
-	        }
-	
-	        return testIdentityAttributeList;
+            daoUtil.executeQuery( );
+
+            while ( daoUtil.next( ) )
+            {
+                testIdentityAttributeList.add( daoUtil.getInt( 1 ) );
+            }
+
+            return testIdentityAttributeList;
         }
     }
-    
+
     /**
      * {@inheritDoc }
      */
     @Override
     public ReferenceList selectTestIdentityAttributesReferenceList( Plugin plugin )
     {
-        ReferenceList testIdentityAttributeList = new ReferenceList();
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
+        ReferenceList testIdentityAttributeList = new ReferenceList( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-	        daoUtil.executeQuery(  );
-	
-	        while ( daoUtil.next(  ) )
-	        {
-	            testIdentityAttributeList.addItem( daoUtil.getInt( 1 ) , daoUtil.getString( 2 ) );
-	        }
-	
-	        return testIdentityAttributeList;
-    	}
+            daoUtil.executeQuery( );
+
+            while ( daoUtil.next( ) )
+            {
+                testIdentityAttributeList.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) );
+            }
+
+            return testIdentityAttributeList;
+        }
     }
-    
+
     /**
      * {@inheritDoc }
      */
-	@Override
-	public List<TestIdentityAttribute> selectTestIdentityAttributesListByIds( Plugin plugin, List<Integer> listIds ) {
-		List<TestIdentityAttribute> testIdentityAttributeList = new ArrayList<>(  );
-		
-		StringBuilder builder = new StringBuilder( );
+    @Override
+    public List<TestIdentityAttribute> selectTestIdentityAttributesListByIds( Plugin plugin, List<Integer> listIds )
+    {
+        List<TestIdentityAttribute> testIdentityAttributeList = new ArrayList<>( );
 
-		if ( !listIds.isEmpty( ) )
-		{
-			for( int i = 0 ; i < listIds.size(); i++ ) {
-			    builder.append( "?," );
-			}
-	
-			String placeHolders =  builder.deleteCharAt( builder.length( ) -1 ).toString( );
-			String stmt = SQL_QUERY_SELECTALL_BY_IDS + placeHolders + ")";
-			
-			
-	        try ( DAOUtil daoUtil = new DAOUtil( stmt, plugin ) )
-	        {
-	        	int index = 1;
-				for( Integer n : listIds ) {
-					daoUtil.setInt(  index++, n ); 
-				}
-	        	
-	        	daoUtil.executeQuery(  );
-	        	while ( daoUtil.next(  ) )
-		        {
-		        	TestIdentityAttribute testIdentityAttribute = new TestIdentityAttribute(  );
-		            int nIndex = 1;
-		            
-		            testIdentityAttribute.setId( daoUtil.getInt( nIndex++ ) );
-				    testIdentityAttribute.setKey( daoUtil.getString( nIndex++ ) );
-				    testIdentityAttribute.setValue( daoUtil.getString( nIndex++ ) );
-				    testIdentityAttribute.setCertifier( daoUtil.getString( nIndex++ ) );
-				    testIdentityAttribute.setCertificationDate( daoUtil.getDate( nIndex++ ) );
-				    testIdentityAttribute.setCertificationLevel( daoUtil.getInt( nIndex ) );
-		            
-		            testIdentityAttributeList.add( testIdentityAttribute );
-		        }
-		
-		        daoUtil.free( );
-		        
-	        }
-	    }
-		return testIdentityAttributeList;
-		
-	}
+        StringBuilder builder = new StringBuilder( );
+
+        if ( !listIds.isEmpty( ) )
+        {
+            for ( int i = 0; i < listIds.size( ); i++ )
+            {
+                builder.append( "?," );
+            }
+
+            String placeHolders = builder.deleteCharAt( builder.length( ) - 1 ).toString( );
+            String stmt = SQL_QUERY_SELECTALL_BY_IDS + placeHolders + ")";
+
+            try ( DAOUtil daoUtil = new DAOUtil( stmt, plugin ) )
+            {
+                int index = 1;
+                for ( Integer n : listIds )
+                {
+                    daoUtil.setInt( index++, n );
+                }
+
+                daoUtil.executeQuery( );
+                while ( daoUtil.next( ) )
+                {
+                    TestIdentityAttribute testIdentityAttribute = new TestIdentityAttribute( );
+                    int nIndex = 1;
+
+                    testIdentityAttribute.setId( daoUtil.getInt( nIndex++ ) );
+                    testIdentityAttribute.setKey( daoUtil.getString( nIndex++ ) );
+                    testIdentityAttribute.setValue( daoUtil.getString( nIndex++ ) );
+                    testIdentityAttribute.setCertifier( daoUtil.getString( nIndex++ ) );
+                    testIdentityAttribute.setCertificationDate( daoUtil.getDate( nIndex++ ) );
+                    testIdentityAttribute.setCertificationLevel( daoUtil.getInt( nIndex ) );
+
+                    testIdentityAttributeList.add( testIdentityAttribute );
+                }
+
+                daoUtil.free( );
+
+            }
+        }
+        return testIdentityAttributeList;
+
+    }
 }

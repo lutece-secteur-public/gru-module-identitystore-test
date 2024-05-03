@@ -108,7 +108,7 @@ public abstract class AbstractIdentityStoreTestCase extends LuteceTestCase
         contextParams.put( "elasticsearch.url", esUrl.contains( "http" ) ? esUrl : "http://" + esUrl );
         IdentitystoreTestUtils.generateFileFromTemplate( basePath, contextTemplatePath, contextParams, CONTEXT_XML_PATH );
 
-        System.out.println( "-------------resourcesDir------------" + basePath );
+        System.out.println( "-------------resourcesDir------------ " + basePath );
         AppPathService.init( basePath );
         AppInit.initServices( "/WEB-INF/conf/" );
 

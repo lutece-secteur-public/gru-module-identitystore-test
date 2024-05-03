@@ -1,1 +1,3 @@
 rest.installed=1
+identitystore.install=1
+geocodes.install=1

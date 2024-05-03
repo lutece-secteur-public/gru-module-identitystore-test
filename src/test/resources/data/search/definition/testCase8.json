@@ -362,8 +362,18 @@
             "type": "string"
           },
           {
+            "key": "birthplace",
+            "value": "SERRIS",
+            "type": "string"
+          },
+          {
             "key": "birthcountry_code",
             "value": "99100",
+            "type": "string"
+          },
+          {
+            "key": "birthcountry",
+            "value": "FRANCE",
             "type": "string"
           },
           {
@@ -407,8 +417,18 @@
             "type": "string"
           },
           {
+            "key": "birthplace",
+            "value": "SERRIS",
+            "type": "string"
+          },
+          {
             "key": "birthcountry_code",
             "value": "99100",
+            "type": "string"
+          },
+          {
+            "key": "birthcountry",
+            "value": "FRANCE",
             "type": "string"
           },
           {
@@ -457,6 +477,11 @@
             "type": "string"
           },
           {
+            "key": "birthcountry",
+            "value": "FRANCE",
+            "type": "string"
+          },
+          {
             "key": "login",
             "value": "coline@yopmail.com",
             "type": "string"
@@ -499,6 +524,11 @@
           {
             "key": "birthplace_code",
             "value": "77449",
+            "type": "string"
+          },
+          {
+            "key": "birthplace",
+            "value": "SERRIS",
             "type": "string"
           },
           {
@@ -547,8 +577,18 @@
             "type": "string"
           },
           {
+            "key": "birthplace",
+            "value": "SERRIS",
+            "type": "string"
+          },
+          {
             "key": "birthcountry_code",
             "value": "99100",
+            "type": "string"
+          },
+          {
+            "key": "birthcountry",
+            "value": "FRANCE",
             "type": "string"
           },
           {

@@ -217,8 +217,18 @@
             "type": "string"
           },
           {
+            "key": "birthplace",
+            "value": "BEAUVOIR",
+            "type": "string"
+          },
+          {
             "key": "birthcountry_code",
             "value": "99100",
+            "type": "string"
+          },
+          {
+            "key": "birthcountry",
+            "value": "FRANCE",
             "type": "string"
           }
         ]
@@ -247,8 +257,18 @@
             "type": "string"
           },
           {
+            "key": "birthplace",
+            "value": "BEAUVOIR",
+            "type": "string"
+          },
+          {
             "key": "birthcountry_code",
             "value": "99100",
+            "type": "string"
+          },
+          {
+            "key": "birthcountry",
+            "value": "FRANCE",
             "type": "string"
           }
         ]
@@ -282,8 +302,18 @@
             "type": "string"
           },
           {
+            "key": "birthplace",
+            "value": "BEAUVOIR",
+            "type": "string"
+          },
+          {
             "key": "birthcountry_code",
             "value": "99100",
+            "type": "string"
+          },
+          {
+            "key": "birthcountry",
+            "value": "FRANCE",
             "type": "string"
           }
         ]
@@ -317,8 +347,18 @@
             "type": "string"
           },
           {
+            "key": "birthplace",
+            "value": "BEAUVOIR",
+            "type": "string"
+          },
+          {
             "key": "birthcountry_code",
             "value": "99100",
+            "type": "string"
+          },
+          {
+            "key": "birthcountry",
+            "value": "FRANCE",
             "type": "string"
           }
         ]

@@ -132,21 +132,26 @@ public class TestAttribute
     }
 
     @Override
-    public boolean equals( Object o )
+    public boolean equals( final Object o )
     {
         if ( this == o )
             return true;
         if ( o == null || getClass( ) != o.getClass( ) )
             return false;
         final TestAttribute that = (TestAttribute) o;
-        return Objects.equals( key, that.key ) && Objects.equals( value, that.value ) && Objects.equals( type, that.type )
-                && Objects.equals( certificationLevel, that.certificationLevel ) && Objects.equals( certifier, that.certifier )
-                && Objects.equals( certificationDate, that.certificationDate );
+        return Objects.equals( this.key, that.key ) && Objects.equals( this.value, that.value ) && Objects.equals( this.type, that.type )
+                && Objects.equals( this.toInt(this.certificationLevel), this.toInt(that.certificationLevel) )
+                && Objects.equals( this.certifier, that.certifier ) && Objects.equals( this.certificationDate, that.certificationDate );
     }
 
     @Override
     public int hashCode( )
     {
-        return Objects.hash( key, value, type, certificationLevel, certifier, certificationDate );
+        return Objects.hash( this.key, this.value, this.type, this.certificationLevel, this.certifier, this.certificationDate );
+    }
+
+    private int toInt( final Integer integer )
+    {
+        return integer == null ? 0 : integer;
     }
 }

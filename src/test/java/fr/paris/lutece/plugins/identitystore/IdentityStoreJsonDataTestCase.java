@@ -39,11 +39,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import fr.paris.lutece.plugins.identitystore.data.TestAttribute;
 import fr.paris.lutece.plugins.identitystore.data.TestDefinition;
 import fr.paris.lutece.plugins.identitystore.data.TestIdentity;
+import fr.paris.lutece.plugins.identitystore.util.FileNameAlphanumericComparator;
+import fr.paris.lutece.plugins.identitystore.util.StringAlphanumericComparator;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
@@ -89,7 +90,7 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
             mapper.enable( DeserializationFeature.UNWRAP_ROOT_VALUE );
             mapper.disable( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES );
 
-            testDefinitions.stream( ).sorted( Comparator.comparing( File::getName ) ).forEach( file -> {
+            testDefinitions.stream( ).sorted( FileNameAlphanumericComparator.createStringComparator() ).forEach(file -> {
                 try
                 {
                     final TestDefinition testDefinition = mapper.readValue( file, TestDefinition.class );
@@ -109,10 +110,14 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
                 }
             } );
             System.out.println( "----- Global test Results -----" );
-            results.keySet( ).stream( ).sorted( String::compareTo )
-                    .forEach( s -> System.out.println( s + " :: " + ( results.get( s ).getLeft( ) ? "OK" : "KO" ) + "\n" + results.get( s ).getRight( ) ) );
+            results.keySet( ).stream( ).sorted(StringAlphanumericComparator.createStringComparator()).forEach( this::displayResult );
             assertTrue( results.values( ).stream( ).allMatch( Pair::getLeft ) );
         }
+    }
+
+    private void displayResult( final String result ) {
+        final String trace = result + " :: " + (results.get(result).getLeft() ? "OK" : "KO") + "\n" + results.get(result).getRight() + "\n";
+        System.out.println(trace);
     }
 
     protected Pair<Boolean, String> getTestResult( final List<TestIdentity> results, final TestDefinition testDefinition )

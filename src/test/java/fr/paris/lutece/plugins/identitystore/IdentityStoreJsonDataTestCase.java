@@ -115,38 +115,36 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
         }
     }
 
-    protected Pair<Boolean, String> getTestResult( final List<TestIdentity> result, final TestDefinition testDefinition )
+    protected Pair<Boolean, String> getTestResult( final List<TestIdentity> results, final TestDefinition testDefinition )
     {
         // Get result names from inputs and sort attributes by key name
         testDefinition.getInputs( ).forEach( testIdentity -> testIdentity.getAttributes( ).sort( Comparator.comparing( TestAttribute::getKey ) ) );
-        result.forEach( testIdentity -> {
+        results.forEach( testIdentity -> {
             testIdentity.getAttributes( ).sort( Comparator.comparing( TestAttribute::getKey ) );
             testDefinition.getInputs( ).stream( ).filter( input -> input.equals( testIdentity ) ).forEach( input -> testIdentity.setName( input.getName( ) ) );
         } );
         testDefinition.getExpected( ).forEach( testIdentity -> testIdentity.getAttributes( ).sort( Comparator.comparing( TestAttribute::getKey ) ) );
-        String message = "Liste des inputs : "
-                + String.join( ", ", testDefinition.getInputs( ).stream( ).map( TestIdentity::getName ).collect( Collectors.toList( ) ) );
-        message += "\nListe des expected : "
-                + String.join( ", ", testDefinition.getExpected( ).stream( ).map( TestIdentity::getName ).collect( Collectors.toList( ) ) );
-        message += "\nListe des résultats : " + String.join( ", ", result.stream( ).map( TestIdentity::getName ).collect( Collectors.toList( ) ) );
-        if ( result.size( ) > testDefinition.getExpected( ).size( ) )
+        String message = "Liste des inputs : " + testDefinition.getInputs( ).stream( ).map( TestIdentity::getName ).collect(Collectors.joining(", "));
+        message += "\nListe des expected : " + testDefinition.getExpected( ).stream( ).map( TestIdentity::getName ).collect(Collectors.joining(", "));
+        message += "\nListe des résultats : " + results.stream( ).map( result -> this.getNameFromInputs(result, testDefinition.getInputs()) ).collect(Collectors.joining(", "));
+        if ( results.size( ) > testDefinition.getExpected( ).size( ) )
         {
-            result.removeAll( testDefinition.getExpected( ) );
-            message += "\nLe résultat de la recherche contient " + result.size( ) + " identité(s) de plus que l'expected.";
+            results.removeAll( testDefinition.getExpected( ) );
+            message += "\nLe résultat de la recherche contient " + results.size( ) + " identité(s) de plus que l'expected.";
             return new MutablePair<>( false, message );
         }
         else
-            if ( result.size( ) < testDefinition.getExpected( ).size( ) )
+            if ( results.size( ) < testDefinition.getExpected( ).size( ) )
             {
-                testDefinition.getExpected( ).removeAll( result );
+                testDefinition.getExpected( ).removeAll( results );
                 message += "\nL'expected contient " + testDefinition.getExpected( ).size( ) + " identité(s) qui n'ont pas été retournée(s) par la recherche.";
                 return new MutablePair<>( false, message );
             }
             else
             { // if equals
                 final List<TestIdentity> expectedCopy = new ArrayList<>( testDefinition.getExpected( ) );
-                final List<TestIdentity> resultCopy = new ArrayList<>( result );
-                testDefinition.getExpected( ).removeAll( result );
+                final List<TestIdentity> resultCopy = new ArrayList<>( results );
+                testDefinition.getExpected( ).removeAll( results );
                 if ( testDefinition.getExpected( ).isEmpty( ) )
                 {
                     message += "\nLe résultat de la recherche match parfaitement l'expected.";
@@ -164,6 +162,10 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
                     return new MutablePair<>( false, message );
                 }
             }
+    }
+
+    private String getNameFromInputs( final TestIdentity result, final List<TestIdentity> inputs ) {
+        return inputs.stream().filter(input -> input.equals(result)).map(TestIdentity::getName).findFirst().orElse("not found");
     }
 
     protected abstract void runDefinition( TestDefinition testDefinition ) throws Exception;

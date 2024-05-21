@@ -1,0 +1,317 @@
+/*
+ * Copyright (c) 2002-2024, City of Paris
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright notice
+ *     and the following disclaimer.
+ *
+ *  2. Redistributions in binary form must reproduce the above copyright notice
+ *     and the following disclaimer in the documentation and/or other materials
+ *     provided with the distribution.
+ *
+ *  3. Neither the name of 'Mairie de Paris' nor 'Lutece' nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * License 1.0
+ */
+package fr.paris.lutece.plugins.identitystore.modules.test;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import fr.paris.lutece.plugins.identitystore.business.rules.duplicate.DuplicateRule;
+import fr.paris.lutece.plugins.identitystore.business.rules.duplicate.DuplicateRuleAttributeTreatment;
+import fr.paris.lutece.plugins.identitystore.modules.test.data.TestAttribute;
+import fr.paris.lutece.plugins.identitystore.modules.test.data.TestDefinition;
+import fr.paris.lutece.plugins.identitystore.modules.test.data.TestDuplicateRule;
+import fr.paris.lutece.plugins.identitystore.modules.test.data.TestIdentity;
+import fr.paris.lutece.plugins.identitystore.modules.test.util.FileNameAlphanumericComparator;
+import fr.paris.lutece.plugins.identitystore.modules.test.util.StringAlphanumericComparator;
+import fr.paris.lutece.plugins.identitystore.service.attribute.IdentityAttributeService;
+import fr.paris.lutece.plugins.identitystore.service.identity.IdentityAttributeNotFoundException;
+import fr.paris.lutece.plugins.identitystore.service.indexer.elastic.index.service.IdentityIndexer;
+import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.AttributeDto;
+import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.AttributeTreatmentType;
+import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.IdentityDto;
+import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.crud.IdentityChangeRequest;
+import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.IdentitySearchRequest;
+import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.SearchAttribute;
+import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.SearchDto;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.sql.DataSource;
+import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndESTestCase
+{
+    protected final Map<String, Pair<Boolean, String>> results = new HashMap<>( );
+    protected final Set<File> testDefinitions = new HashSet<>( );
+
+    @Override
+    protected void preInitApplication( ) throws Exception
+    {
+        final Path inputsPath = Paths.get( basePath, this.getTestDataPath( ), "definition" );
+        final Path configPath = Paths.get( this.getTestDataPath( ), "config/identitystore.properties" );
+        this.propertiesTemplatePath = configPath.toString( );
+
+        final PathMatcher jsonMatcher = FileSystems.getDefault( ).getPathMatcher( "glob:**/*.json" );
+        Files.walkFileTree( inputsPath, new SimpleFileVisitor<Path>( )
+        {
+            @Override
+            public FileVisitResult visitFile( Path path, BasicFileAttributes attrs )
+            {
+                if ( !Files.isDirectory( path ) && jsonMatcher.matches( path ) )
+                {
+                    testDefinitions.add( path.toFile( ) );
+                }
+                return FileVisitResult.CONTINUE;
+            }
+        } );
+    }
+
+    protected abstract String getTestDataPath( );
+
+    public void test( )
+    {
+
+        if ( !testDefinitions.isEmpty() )
+        {
+            final ObjectMapper mapper = new ObjectMapper( );
+            mapper.enable( SerializationFeature.INDENT_OUTPUT );
+            mapper.enable( SerializationFeature.WRAP_ROOT_VALUE );
+            mapper.enable( DeserializationFeature.UNWRAP_ROOT_VALUE );
+            mapper.disable( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES );
+
+            testDefinitions.stream( ).sorted( FileNameAlphanumericComparator.createStringComparator() ).forEach(file -> {
+                try
+                {
+                    final TestDefinition testDefinition = mapper.readValue( file, TestDefinition.class );
+                    if ( testDefinition != null )
+                    {
+                        this.runDefinition( testDefinition );
+                        this.clearData( );
+                    }
+                    else
+                    {
+                        throw new RuntimeException( "ERROR " + file.getName( ) + " : JSON is empty" );
+                    }
+                }
+                catch( Exception e )
+                {
+                    throw new RuntimeException( e );
+                }
+            } );
+            System.out.println( "----- Global test Results -----" );
+            results.keySet( ).stream( ).sorted(StringAlphanumericComparator.createStringComparator()).forEach( this::displayResult );
+            assertTrue( results.values( ).stream( ).allMatch( Pair::getLeft ) );
+        }
+    }
+
+    private void displayResult( final String result ) {
+        final String trace = result + " :: " + (results.get(result).getLeft() ? "OK" : "KO") + "\n" + results.get(result).getRight() + "\n";
+        System.out.println(trace);
+    }
+
+    protected Pair<Boolean, String> getTestResult( final List<TestIdentity> results, final TestDefinition testDefinition )
+    {
+        // Get result names from inputs and sort attributes by key name
+        testDefinition.getInputs( ).forEach( testIdentity -> testIdentity.getAttributes( ).sort( Comparator.comparing( TestAttribute::getKey ) ) );
+        results.forEach( testIdentity -> {
+            testIdentity.getAttributes( ).sort( Comparator.comparing( TestAttribute::getKey ) );
+            testDefinition.getInputs( ).stream( ).filter( input -> input.equals( testIdentity ) ).forEach( input -> testIdentity.setName( input.getName( ) ) );
+        } );
+        testDefinition.getExpected( ).forEach( testIdentity -> testIdentity.getAttributes( ).sort( Comparator.comparing( TestAttribute::getKey ) ) );
+        String message = "Liste des inputs : " + testDefinition.getInputs( ).stream( ).map( TestIdentity::getName ).collect(Collectors.joining(", "));
+        message += "\nListe des expected : " + testDefinition.getExpected( ).stream( ).map( TestIdentity::getName ).collect(Collectors.joining(", "));
+        message += "\nListe des résultats : " + results.stream( ).map( result -> this.getNameFromInputs(result, testDefinition.getExpected()) ).collect(Collectors.joining(", "));
+        if ( results.size( ) > testDefinition.getExpected( ).size( ) )
+        {
+            results.removeAll( testDefinition.getExpected( ) );
+            message += "\nLe résultat de la recherche contient " + results.size( ) + " identité(s) de plus que l'expected.";
+            return new MutablePair<>( false, message );
+        }
+        else
+            if ( results.size( ) < testDefinition.getExpected( ).size( ) )
+            {
+                testDefinition.getExpected( ).removeAll( results );
+                message += "\nL'expected contient " + testDefinition.getExpected( ).size( ) + " identité(s) qui n'ont pas été retournée(s) par la recherche.";
+                return new MutablePair<>( false, message );
+            }
+            else
+            { // if equals
+                final List<TestIdentity> expectedCopy = new ArrayList<>( testDefinition.getExpected( ) );
+                final List<TestIdentity> resultCopy = new ArrayList<>( results );
+                testDefinition.getExpected( ).removeAll( results );
+                if ( testDefinition.getExpected( ).isEmpty( ) )
+                {
+                    message += "\nLe résultat de la recherche match parfaitement l'expected.";
+                    return new MutablePair<>( true, message );
+                }
+                else
+                {
+                    message += "\nL'expected contient " + testDefinition.getExpected( ).size( )
+                            + " identité(s) qui n'ont pas été retournée(s) par la recherche.";
+                    resultCopy.removeAll( expectedCopy );
+                    if ( !resultCopy.isEmpty( ) )
+                    {
+                        message += "\nLe résultat de la recherche contient " + resultCopy.size( ) + " identité(s) non définie(s) dans l'expected.";
+                    }
+                    return new MutablePair<>( false, message );
+                }
+            }
+    }
+
+    private String getNameFromInputs( final TestIdentity result, final List<TestIdentity> expects ) {
+        return expects.stream().filter(expected -> expected.equals(result)).map(TestIdentity::getName).findFirst().orElse("not found");
+    }
+
+    protected abstract void runDefinition( TestDefinition testDefinition ) throws Exception;
+
+    protected void clearData( ) throws Exception
+    {
+        System.out.println( "----- Clear test data -----" );
+        /* Clean BDD tables */
+        System.out.println( "----- Truncate BDD tables -----" );
+        final DataSource ds = getDataSource( );
+        try ( final Statement statement = ds.getConnection( ).createStatement( ) ) {
+            statement.execute("truncate table identitystore_identity, identitystore_identity_history, identitystore_identity_attribute, identitystore_identity_attribute_certificate, identitystore_identity_attribute_history, identitystore_index_action;" );
+        }
+
+        /* Clean ES index */
+        System.out.println( "----- Delete ES Index -----" );
+        final IdentityIndexer identityIndexer = new IdentityIndexer( "http://" + elasticsearchContainer.getHttpHostAddress( ) );
+        final String indexBehindAlias = identityIndexer.getIndexBehindAlias( CURRENT_INDEX_ALIAS );
+        identityIndexer.deleteIndex( indexBehindAlias );
+        identityIndexer.initIndex( CURRENT_INDEX );
+        identityIndexer.addAliasOnIndex( CURRENT_INDEX, CURRENT_INDEX_ALIAS );
+    }
+
+    protected TestIdentity toTestIdentity( final IdentityDto identityDto )
+    {
+        final TestIdentity testIdentity = new TestIdentity( );
+        testIdentity.setConnectionId( identityDto.getConnectionId( ) );
+        testIdentity.setCustomerId( identityDto.getCustomerId( ) );
+        identityDto.getAttributes( ).forEach( certifiedAttribute -> {
+            TestAttribute testAttribute = new TestAttribute( );
+            testIdentity.getAttributes( ).add( testAttribute );
+            testAttribute.setCertificationDate( certifiedAttribute.getCertificationDate( ) );
+            testAttribute.setCertifier( certifiedAttribute.getCertifier( ) );
+            testAttribute.setType( certifiedAttribute.getType( ) );
+            testAttribute.setKey( certifiedAttribute.getKey( ) );
+            testAttribute.setValue( certifiedAttribute.getValue( ) );
+            testAttribute.setCertificationLevel( certifiedAttribute.getCertificationLevel( ) );
+
+        } );
+        return testIdentity;
+    }
+
+    protected IdentityDto toIdentityDto( final TestIdentity testIdentity ) {
+        final IdentityDto identity = new IdentityDto( );
+        identity.setConnectionId( testIdentity.getConnectionId( ) );
+        identity.setCustomerId( testIdentity.getCustomerId( ) );
+        testIdentity.getAttributes( ).forEach( testAttribute -> {
+            final AttributeDto certifiedAttribute = new AttributeDto( );
+            identity.getAttributes( ).add( certifiedAttribute );
+            certifiedAttribute.setValue( testAttribute.getValue( ) );
+            certifiedAttribute.setKey( testAttribute.getKey( ) );
+            certifiedAttribute.setCertificationDate( testAttribute.getCertificationDate( ) );
+            certifiedAttribute.setCertifier( testAttribute.getCertifier( ) );
+        } );
+        return identity;
+    }
+
+    protected IdentityChangeRequest toIdentityChangeRequest(final TestIdentity testIdentity )
+    {
+        final IdentityChangeRequest identityChangeRequest = new IdentityChangeRequest( );
+        identityChangeRequest.setIdentity( this.toIdentityDto(testIdentity) );
+        return identityChangeRequest;
+    }
+
+    protected DuplicateRule toDuplicateRule(final TestDuplicateRule testDuplicateRule ) {
+        final DuplicateRule duplicateRule = new DuplicateRule();
+        duplicateRule.setName( testDuplicateRule.getName( ) );
+        duplicateRule.setCode( testDuplicateRule.getCode() );
+        duplicateRule.setDescription( testDuplicateRule.getName() );
+        duplicateRule.setDaemon( testDuplicateRule.isDaemon() );
+        duplicateRule.setActive( testDuplicateRule.isActive() );
+        duplicateRule.setDetectionLimit( -1 );
+        duplicateRule.setNbEqualAttributes( testDuplicateRule.getNbEqualAttributes( ) );
+        duplicateRule.setNbFilledAttributes( testDuplicateRule.getNbFilledAttributes( ) );
+        duplicateRule.setNbMissingAttributes( testDuplicateRule.getNbMissingAttributes( ) );
+        duplicateRule.setCheckedAttributes(testDuplicateRule.getCheckedAttributes().stream().map(key -> {
+            try {
+                return IdentityAttributeService.instance().getAttributeKey(key);
+            } catch (IdentityAttributeNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.toList()));
+        duplicateRule.setAttributeTreatments(testDuplicateRule.getListAttributeTreatments().stream().map(treatment -> {
+            final DuplicateRuleAttributeTreatment attributeTreatment = new DuplicateRuleAttributeTreatment( );
+            attributeTreatment.setAttributes(treatment.getAttributes().stream().map(key -> {
+                try {
+                    return IdentityAttributeService.instance().getAttributeKey(key);
+                } catch (IdentityAttributeNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }).collect(Collectors.toList()));
+            attributeTreatment.setType(AttributeTreatmentType.valueOf(treatment.getType()));
+            return attributeTreatment;
+
+        }).collect(Collectors.toList()));
+
+        return duplicateRule;
+    }
+
+    protected IdentitySearchRequest toIdentitySearchRequest(final TestIdentity testIdentity )
+    {
+        final IdentitySearchRequest identitySearchRequest = new IdentitySearchRequest( );
+        final SearchDto search = new SearchDto( );
+        search.setAttributes( new ArrayList<>( ) );
+        identitySearchRequest.setSearch( search );
+        testIdentity.getAttributes( ).forEach( testAttribute -> {
+            final SearchAttribute searchAttributeDto = new SearchAttribute( );
+            search.getAttributes( ).add( searchAttributeDto );
+            searchAttributeDto.setKey( testAttribute.getKey( ) );
+            searchAttributeDto.setValue( testAttribute.getValue( ) );
+            final boolean strict = !StringUtils.equalsAny( testAttribute.getKey( ), "first_name", "family_name", "preferred_username" );
+            searchAttributeDto.setTreatmentType( strict ? AttributeTreatmentType.STRICT : AttributeTreatmentType.APPROXIMATED );
+        } );
+        return identitySearchRequest;
+    }
+}

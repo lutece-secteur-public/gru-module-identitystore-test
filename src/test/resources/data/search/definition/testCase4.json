@@ -1,7 +1,7 @@
 {
   "testDefinition": {
     "name": "Recherche :: Test 4",
-    "test": {
+    "searchRequest": {
       "attributes": [
         {
           "key": "gender",

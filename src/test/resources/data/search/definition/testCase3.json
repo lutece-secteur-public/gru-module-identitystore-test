@@ -1,7 +1,7 @@
 {
   "testDefinition": {
     "name": "Recherche :: Test 3",
-    "test": {
+    "searchRequest": {
       "attributes": [
         {
           "key": "login",

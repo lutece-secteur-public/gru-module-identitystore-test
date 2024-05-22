@@ -1,0 +1,252 @@
+{
+  "testDefinition": {
+    "name": "RG_GEN_SuspectDoublon_03",
+    "description": "6 attributs égaux + 1 différent",
+    "duplicateRule": {
+      "code": "RG_GEN_SuspectDoublon_03",
+      "name": "6 attributs égaux + 1 différent ",
+      "priority": 0,
+      "active": true,
+      "daemon": true,
+      "nbFilledAttributes": 7,
+      "nbEqualAttributes": 6,
+      "nbMissingAttributes": 0,
+      "checkedAttributes": [
+        "birthplace_code",
+        "birthcountry_code",
+        "birthdate",
+        "gender",
+        "family_name",
+        "preferred_username",
+        "first_name"
+      ],
+      "attributeTreatments": [
+        {
+          "type": "DIFFERENT",
+          "attributes": [
+            "gender"
+          ]
+        },
+        {
+          "type": "DIFFERENT",
+          "attributes": [
+            "birthdate"
+          ]
+        },
+        {
+          "type": "DIFFERENT",
+          "attributes": [
+            "preferred_username"
+          ]
+        },
+        {
+          "type": "DIFFERENT",
+          "attributes": [
+            "family_name"
+          ]
+        },
+        {
+          "type": "DIFFERENT",
+          "attributes": [
+            "first_name"
+          ]
+        },
+        {
+          "type": "DIFFERENT",
+          "attributes": [
+            "birthplace_code"
+          ]
+        },
+        {
+          "type": "DIFFERENT",
+          "attributes": [
+            "birthcountry_code"
+          ]
+        },
+        {
+          "type": "APPROXIMATED",
+          "attributes": [
+            "preferred_username"
+          ]
+        },
+        {
+          "type": "APPROXIMATED",
+          "attributes": [
+            "first_name"
+          ]
+        },
+        {
+          "type": "APPROXIMATED",
+          "attributes": [
+            "family_name"
+          ]
+        }
+      ]
+    },
+    "searchRequest": {
+      "attributes": [
+        {
+          "key": "gender",
+          "value": "1",
+          "type": "string"
+        },
+        {
+          "key": "family_name",
+          "value": "Dupont",
+          "type": "string"
+        },
+        {
+          "key": "preferred_username",
+          "value": "Godard",
+          "type": "string"
+        },
+        {
+          "key": "first_name",
+          "value": "Dominique David",
+          "type": "string"
+        },
+        {
+          "key": "birthdate",
+          "value": "01/01/2002",
+          "type": "string"
+        },
+        {
+          "key": "birthplace_code",
+          "value": "91027",
+          "type": "string"
+        },
+        {
+          "key": "birthcountry_code",
+          "value": "99100",
+          "type": "string"
+        }
+      ]
+    },
+    "inputs": [
+      {
+        "name": "Identité 1",
+        "attributes": [
+          {
+            "key": "gender",
+            "value": "1",
+            "type": "string"
+          },
+          {
+            "key": "family_name",
+            "value": "Dupond",
+            "type": "string"
+          },
+          {
+            "key": "preferred_username",
+            "value": "Godard",
+            "type": "string"
+          },
+          {
+            "key": "first_name",
+            "value": "Dominique David",
+            "type": "string"
+          },
+          {
+            "key": "birthdate",
+            "value": "01/01/2002",
+            "type": "string"
+          },
+          {
+            "key": "birthplace_code",
+            "value": "91027",
+            "type": "string"
+          },
+          {
+            "key": "birthcountry_code",
+            "value": "99100",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Identité 2",
+        "attributes": [
+          {
+            "key": "gender",
+            "value": "1",
+            "type": "string"
+          },
+          {
+            "key": "family_name",
+            "value": "Dupont",
+            "type": "string"
+          },
+          {
+            "key": "preferred_username",
+            "value": "Herfod",
+            "type": "string"
+          },
+          {
+            "key": "first_name",
+            "value": "Dominique David",
+            "type": "string"
+          },
+          {
+            "key": "birthdate",
+            "value": "01/01/2002",
+            "type": "string"
+          },
+          {
+            "key": "birthplace_code",
+            "value": "91027",
+            "type": "string"
+          },
+          {
+            "key": "birthcountry_code",
+            "value": "99100",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Identité 3",
+        "attributes": [
+          {
+            "key": "gender",
+            "value": "2",
+            "type": "string"
+          },
+          {
+            "key": "family_name",
+            "value": "Soulier",
+            "type": "string"
+          },
+          {
+            "key": "preferred_username",
+            "value": "Alfred",
+            "type": "string"
+          },
+          {
+            "key": "first_name",
+            "value": "Johanna",
+            "type": "string"
+          },
+          {
+            "key": "birthdate",
+            "value": "01/01/2002",
+            "type": "string"
+          },
+          {
+            "key": "birthplace_code",
+            "value": "78090",
+            "type": "string"
+          },
+          {
+            "key": "birthcountry_code",
+            "value": "99100",
+            "type": "string"
+          }
+        ]
+      }
+    ],
+    "expected": [
+      "Identité 1",
+      "Identité 2"
+    ]
+  }
+}

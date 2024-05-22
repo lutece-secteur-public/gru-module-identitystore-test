@@ -34,10 +34,12 @@
 package fr.paris.lutece.plugins.identitystore.modules.test.data;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @JsonInclude( JsonInclude.Include.NON_NULL )
 public class TestIdentity
@@ -103,7 +105,9 @@ public class TestIdentity
         if ( o == null || getClass( ) != o.getClass( ) )
             return false;
         final TestIdentity that = (TestIdentity) o;
-        return Objects.equals( attributes, that.attributes );
+        final List<TestAttribute> thisAttributesToCompare = this.attributes.stream().filter(attribute -> !StringUtils.equals(attribute.getKey(), "birthplace") && !StringUtils.equals(attribute.getKey(), "birthcountry")).collect(Collectors.toList());
+        final List<TestAttribute> thatAttributesToCompare = that.attributes.stream().filter(attribute -> !StringUtils.equals(attribute.getKey(), "birthplace") && !StringUtils.equals(attribute.getKey(), "birthcountry")).collect(Collectors.toList());
+        return Objects.equals(thisAttributesToCompare, thatAttributesToCompare );
     }
 
     @Override

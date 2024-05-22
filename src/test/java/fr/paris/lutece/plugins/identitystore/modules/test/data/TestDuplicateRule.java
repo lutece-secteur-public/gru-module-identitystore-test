@@ -10,7 +10,7 @@ public class TestDuplicateRule {
     private int nbFilledAttributes;
     private int nbEqualAttributes;
     private int nbMissingAttributes;
-    private List<TestDuplicateRuleAttributeTreatment> listAttributeTreatments = new ArrayList<>( );
+    private List<TestDuplicateRuleAttributeTreatment> attributeTreatments = new ArrayList<>( );
     private int priority;
     private boolean active;
     private boolean daemon;
@@ -63,12 +63,12 @@ public class TestDuplicateRule {
         this.nbMissingAttributes = nbMissingAttributes;
     }
 
-    public List<TestDuplicateRuleAttributeTreatment> getListAttributeTreatments() {
-        return listAttributeTreatments;
+    public List<TestDuplicateRuleAttributeTreatment> getAttributeTreatments() {
+        return attributeTreatments;
     }
 
-    public void setListAttributeTreatments(List<TestDuplicateRuleAttributeTreatment> listAttributeTreatments) {
-        this.listAttributeTreatments = listAttributeTreatments;
+    public void setAttributeTreatments(List<TestDuplicateRuleAttributeTreatment> attributeTreatments) {
+        this.attributeTreatments = attributeTreatments;
     }
 
     public int getPriority() {

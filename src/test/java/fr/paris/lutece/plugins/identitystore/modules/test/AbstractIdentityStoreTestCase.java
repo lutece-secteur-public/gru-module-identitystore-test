@@ -114,6 +114,7 @@ public abstract class AbstractIdentityStoreTestCase extends LuteceTestCase
 
         _bInit = true;
         System.out.println( "Lutece services initialized" );
+        System.out.println( );
     };
 
     protected void cleanApplication( ) throws IOException

@@ -60,7 +60,6 @@ public class IdentitySearcherTest extends IdentityStoreJsonDataTestCase
     @Override
     protected void runDefinition( final TestDefinition testDefinition ) throws Exception
     {
-        System.out.println( "----- Running test definition: " + testDefinition.getName( ) + " -----" );
         System.out.println( "----- Init test data -----" );
         testDefinition.getInputs( ).stream( )
                 .map( testIdentity -> new ImmutablePair<>( testIdentity.getName( ), this.toIdentityChangeRequest( testIdentity ) ) ).forEach( pair -> {

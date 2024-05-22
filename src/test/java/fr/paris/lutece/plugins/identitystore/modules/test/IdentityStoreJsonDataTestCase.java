@@ -75,11 +75,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndESTestCase
 {
+    private static final String PROTOCOL = "http://";
     protected final Map<String, Pair<Boolean, String>> results = new HashMap<>( );
     protected final Set<File> testDefinitions = new HashSet<>( );
 
@@ -124,8 +126,17 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
                     final TestDefinition testDefinition = mapper.readValue( file, TestDefinition.class );
                     if ( testDefinition != null )
                     {
+                        System.out.println( "----------------------------------------------------------------------" );
+                        System.out.println( "----- Running test definition: " + testDefinition.getName( ) + " -----" );
+                        System.out.println( "----------------------------------------------------------------------" );
+                        System.out.println();
+                        System.out.println( "Description: " + testDefinition.getDescription( )  );
+                        System.out.println();
                         this.runDefinition( testDefinition );
+                        System.out.println();
+                        System.out.println( "----- Clear test data -----" );
                         this.clearData( );
+                        System.out.println();
                     }
                     else
                     {
@@ -150,62 +161,73 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
 
     protected Pair<Boolean, String> getTestResult( final List<TestIdentity> results, final TestDefinition testDefinition )
     {
+        // Transform expected identities names to TestIdentity objects
+        final List<TestIdentity> expectedTestIdentities = testDefinition.getExpected().stream()
+                .map(expected -> testDefinition.getInputs().stream().filter(input -> input.getName().equals(expected)).findFirst().orElse(null))
+                .filter(Objects::nonNull)
+                .peek( testIdentity -> testIdentity.getAttributes( ).sort( Comparator.comparing( TestAttribute::getKey ) ) )
+                .collect(Collectors.toList());
+
         // Get result names from inputs and sort attributes by key name
         testDefinition.getInputs( ).forEach( testIdentity -> testIdentity.getAttributes( ).sort( Comparator.comparing( TestAttribute::getKey ) ) );
         results.forEach( testIdentity -> {
             testIdentity.getAttributes( ).sort( Comparator.comparing( TestAttribute::getKey ) );
             testDefinition.getInputs( ).stream( ).filter( input -> input.equals( testIdentity ) ).forEach( input -> testIdentity.setName( input.getName( ) ) );
         } );
-        testDefinition.getExpected( ).forEach( testIdentity -> testIdentity.getAttributes( ).sort( Comparator.comparing( TestAttribute::getKey ) ) );
-        String message = "Liste des inputs : " + testDefinition.getInputs( ).stream( ).map( TestIdentity::getName ).collect(Collectors.joining(", "));
-        message += "\nListe des expected : " + testDefinition.getExpected( ).stream( ).map( TestIdentity::getName ).collect(Collectors.joining(", "));
-        message += "\nListe des résultats : " + results.stream( ).map( result -> this.getNameFromInputs(result, testDefinition.getExpected()) ).collect(Collectors.joining(", "));
+
+        // Build result message to compare inputs and expected results
+        final StringBuilder message = new StringBuilder("Liste des identités testées : " + testDefinition.getInputs( ).stream( ).map( TestIdentity::getName ).collect(Collectors.joining(", ")));
+        message.append("\nListe des identités attendues pour la réussite du test : ")
+                .append(String.join(", ", testDefinition.getExpected()))
+                .append("\nListe des identités retournées par le test : ")
+                .append(results.stream().map(result -> this.getNameFromInputs(result, testDefinition.getInputs())).collect(Collectors.joining(", ")));
+
+        // If there is more results than expected by the test definition, calculate how much more there is
         if ( results.size( ) > testDefinition.getExpected( ).size( ) )
         {
-            results.removeAll( testDefinition.getExpected( ) );
-            message += "\nLe résultat de la recherche contient " + results.size( ) + " identité(s) de plus que l'expected.";
-            return new MutablePair<>( false, message );
+            results.removeAll( expectedTestIdentities );
+            message.append("\nLe résultat du test contient ").append(results.size()).append(" identité(s) de plus que la liste des identités attendues pour la réussite du test.");
+            return new MutablePair<>( false, message.toString() );
         }
         else
+            // If there is less, calculate how much
             if ( results.size( ) < testDefinition.getExpected( ).size( ) )
             {
-                testDefinition.getExpected( ).removeAll( results );
-                message += "\nL'expected contient " + testDefinition.getExpected( ).size( ) + " identité(s) qui n'ont pas été retournée(s) par la recherche.";
-                return new MutablePair<>( false, message );
+                expectedTestIdentities.removeAll( results );
+                message.append("\nLa liste des identités attendues pour la réussite du test contient ").append(expectedTestIdentities.size()).append(" identité(s) qui n'ont pas été retournée(s) par le test.");
+                return new MutablePair<>( false, message.toString() );
             }
             else
-            { // if equals
-                final List<TestIdentity> expectedCopy = new ArrayList<>( testDefinition.getExpected( ) );
+            { // Finally, if the sizes are equal, check if the lists are the same (there can be differences)
+                final List<TestIdentity> expectedCopy = new ArrayList<>( expectedTestIdentities );
                 final List<TestIdentity> resultCopy = new ArrayList<>( results );
-                testDefinition.getExpected( ).removeAll( results );
-                if ( testDefinition.getExpected( ).isEmpty( ) )
+                expectedTestIdentities.removeAll( results );
+                if ( expectedTestIdentities.isEmpty( ) ) // means that the two lists contains the same identities, our test is OK then :)
                 {
-                    message += "\nLe résultat de la recherche match parfaitement l'expected.";
-                    return new MutablePair<>( true, message );
+                    message.append("\nLe résultat du test correspond à la liste des identités attendues pour la réussite du test.");
+                    return new MutablePair<>( true, message.toString() );
                 }
-                else
+                else // Same size but different identities, our test is KO :(
                 {
-                    message += "\nL'expected contient " + testDefinition.getExpected( ).size( )
-                            + " identité(s) qui n'ont pas été retournée(s) par la recherche.";
+                    message.append("\nLa liste des identités attendues pour la réussite du test contient ").append(expectedTestIdentities.size()).append(" identité(s) qui n'ont pas été retournée(s) par le test.");
                     resultCopy.removeAll( expectedCopy );
                     if ( !resultCopy.isEmpty( ) )
                     {
-                        message += "\nLe résultat de la recherche contient " + resultCopy.size( ) + " identité(s) non définie(s) dans l'expected.";
+                        message.append("\nLe résultat du test contient ").append(resultCopy.size()).append(" identité(s) non définie(s) dans la liste des identités attendues pour la réussite du test.");
                     }
-                    return new MutablePair<>( false, message );
+                    return new MutablePair<>( false, message.toString() );
                 }
             }
     }
 
-    private String getNameFromInputs( final TestIdentity result, final List<TestIdentity> expects ) {
-        return expects.stream().filter(expected -> expected.equals(result)).map(TestIdentity::getName).findFirst().orElse("not found");
+    private String getNameFromInputs( final TestIdentity result, final List<TestIdentity> inputs ) {
+        return inputs.stream().filter(expected -> expected.equals(result)).map(TestIdentity::getName).findFirst().orElse("not found");
     }
 
     protected abstract void runDefinition( TestDefinition testDefinition ) throws Exception;
 
     protected void clearData( ) throws Exception
     {
-        System.out.println( "----- Clear test data -----" );
         /* Clean BDD tables */
         System.out.println( "----- Truncate BDD tables -----" );
         final DataSource ds = getDataSource( );
@@ -215,7 +237,7 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
 
         /* Clean ES index */
         System.out.println( "----- Delete ES Index -----" );
-        final IdentityIndexer identityIndexer = new IdentityIndexer( "http://" + elasticsearchContainer.getHttpHostAddress( ) );
+        final IdentityIndexer identityIndexer = new IdentityIndexer( PROTOCOL + elasticsearchContainer.getHttpHostAddress( ) );
         final String indexBehindAlias = identityIndexer.getIndexBehindAlias( CURRENT_INDEX_ALIAS );
         identityIndexer.deleteIndex( indexBehindAlias );
         identityIndexer.initIndex( CURRENT_INDEX );
@@ -281,7 +303,7 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
                 throw new RuntimeException(e);
             }
         }).collect(Collectors.toList()));
-        duplicateRule.setAttributeTreatments(testDuplicateRule.getListAttributeTreatments().stream().map(treatment -> {
+        duplicateRule.setAttributeTreatments(testDuplicateRule.getAttributeTreatments().stream().map(treatment -> {
             final DuplicateRuleAttributeTreatment attributeTreatment = new DuplicateRuleAttributeTreatment( );
             attributeTreatment.setAttributes(treatment.getAttributes().stream().map(key -> {
                 try {

@@ -47,7 +47,7 @@ public class TestDefinition
     private String description;
     private TestIdentity searchRequest;
     private List<TestIdentity> inputs = new ArrayList<>( );
-    private List<TestIdentity> expected = new ArrayList<>( );
+    private List<String> expected = new ArrayList<>( );
     private TestDuplicateRule duplicateRule;
 
     public String getName( )
@@ -88,12 +88,12 @@ public class TestDefinition
         this.inputs = inputs;
     }
 
-    public List<TestIdentity> getExpected( )
+    public List<String> getExpected( )
     {
         return expected;
     }
 
-    public void setExpected( List<TestIdentity> expected )
+    public void setExpected( List<String> expected )
     {
         this.expected = expected;
     }

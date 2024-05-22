@@ -1,0 +1,179 @@
+{
+  "testDefinition": {
+    "name": "RG_GEN_StrictDoublon_01",
+    "description": "6 attributs pivot égaux (doublons stricts)",
+    "duplicateRule": {
+      "code": "RG_GEN_StrictDoublon_01",
+      "name": "Règle de détection des doublons stricts pour les personnes nées en France",
+      "priority": 0,
+      "active": true,
+      "daemon": true,
+      "nbFilledAttributes": 6,
+      "nbEqualAttributes": 6,
+      "nbMissingAttributes": 0,
+      "checkedAttributes": [
+        "birthplace_code",
+        "birthcountry_code",
+        "birthdate",
+        "gender",
+        "family_name",
+        "first_name"
+      ]
+    },
+    "searchRequest": {
+      "attributes": [
+        {
+          "key": "gender",
+          "value": "1",
+          "type": "string"
+        },
+        {
+          "key": "family_name",
+          "value": "Dupont",
+          "type": "string"
+        },
+        {
+          "key": "first_name",
+          "value": "Dominique David",
+          "type": "string"
+        },
+        {
+          "key": "birthdate",
+          "value": "01/01/2002",
+          "type": "string"
+        },
+        {
+          "key": "birthplace_code",
+          "value": "91027",
+          "type": "string"
+        },
+        {
+          "key": "birthcountry_code",
+          "value": "99100",
+          "type": "string"
+        }
+      ]
+    },
+    "inputs": [
+      {
+        "name": "Identité 1",
+        "attributes": [
+          {
+            "key": "gender",
+            "value": "1",
+            "type": "string"
+          },
+          {
+            "key": "family_name",
+            "value": "Dupont",
+            "type": "string"
+          },
+          {
+            "key": "first_name",
+            "value": "Dominique David",
+            "type": "string"
+          },
+          {
+            "key": "birthdate",
+            "value": "01/01/2002",
+            "type": "string"
+          },
+          {
+            "key": "birthplace_code",
+            "value": "91027",
+            "type": "string"
+          },
+          {
+            "key": "birthcountry_code",
+            "value": "99100",
+            "type": "string"
+          },
+          {
+            "key": "mobile_phone",
+            "value": "0612345678",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Identité 2",
+        "attributes": [
+          {
+            "key": "gender",
+            "value": "1",
+            "type": "string"
+          },
+          {
+            "key": "family_name",
+            "value": "Dupont",
+            "type": "string"
+          },
+          {
+            "key": "first_name",
+            "value": "Dominique David",
+            "type": "string"
+          },
+          {
+            "key": "birthdate",
+            "value": "01/01/2002",
+            "type": "string"
+          },
+          {
+            "key": "birthplace_code",
+            "value": "91027",
+            "type": "string"
+          },
+          {
+            "key": "birthcountry_code",
+            "value": "99100",
+            "type": "string"
+          },
+          {
+            "key": "fixed_phone",
+            "value": "0123456789",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Identité 3",
+        "attributes": [
+          {
+            "key": "gender",
+            "value": "1",
+            "type": "string"
+          },
+          {
+            "key": "family_name",
+            "value": "Dupont",
+            "type": "string"
+          },
+          {
+            "key": "first_name",
+            "value": "David-Dominique",
+            "type": "string"
+          },
+          {
+            "key": "birthdate",
+            "value": "01/01/2002",
+            "type": "string"
+          },
+          {
+            "key": "birthplace_code",
+            "value": "78090",
+            "type": "string"
+          },
+          {
+            "key": "birthcountry_code",
+            "value": "99100",
+            "type": "string"
+          }
+        ]
+      }
+    ],
+    "expected": [
+      "Identité 1",
+      "Identité 2"
+    ]
+  }
+}

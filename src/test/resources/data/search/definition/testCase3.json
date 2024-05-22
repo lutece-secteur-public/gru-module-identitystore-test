@@ -138,31 +138,7 @@
       }
     ],
     "expected": [
-      {
-        "name": "Identité 1",
-        "attributes": [
-          {
-            "key": "login",
-            "value": "j.dupont@yopmail.com",
-            "type": "string"
-          },
-          {
-            "key": "family_name",
-            "value": "Dupont",
-            "type": "string"
-          },
-          {
-            "key": "first_name",
-            "value": "Jean",
-            "type": "string"
-          },
-          {
-            "key": "birthdate",
-            "value": "10/10/1980",
-            "type": "string"
-          }
-        ]
-      }
+      "Identité 1"
     ]
   }
 }

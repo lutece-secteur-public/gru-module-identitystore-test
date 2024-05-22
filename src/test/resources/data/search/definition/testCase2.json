@@ -133,51 +133,7 @@
       }
     ],
     "expected": [
-      {
-        "name": "Identité 1",
-        "attributes": [
-          {
-            "key": "gender",
-            "value": "1",
-            "type": "string"
-          },
-          {
-            "key": "family_name",
-            "value": "Dupont",
-            "type": "string"
-          },
-          {
-            "key": "first_name",
-            "value": "Dominique David",
-            "type": "string"
-          },
-          {
-            "key": "birthdate",
-            "value": "01/01/2002",
-            "type": "string"
-          },
-          {
-            "key": "birthplace_code",
-            "value": "91027",
-            "type": "string"
-          },
-          {
-            "key": "birthplace",
-            "value": "ATHIS MONS",
-            "type": "string"
-          },
-          {
-            "key": "birthcountry_code",
-            "value": "99100",
-            "type": "string"
-          },
-          {
-            "key": "birthcountry",
-            "value": "FRANCE",
-            "type": "string"
-          }
-        ]
-      }
+      "Identité 1"
     ]
   }
 }

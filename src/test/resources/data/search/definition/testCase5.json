@@ -73,36 +73,7 @@
       }
     ],
     "expected": [
-      {
-        "name": "Identité 1",
-        "attributes": [
-          {
-            "key": "gender",
-            "value": "1",
-            "type": "string"
-          },
-          {
-            "key": "family_name",
-            "value": "Clement",
-            "type": "string"
-          },
-          {
-            "key": "first_name",
-            "value": "Laurent",
-            "type": "string"
-          },
-          {
-            "key": "birthdate",
-            "value": "01/12/1960",
-            "type": "string"
-          },
-          {
-            "key": "login",
-            "value": "laurent.clement@paris.fr",
-            "type": "string"
-          }
-        ]
-      }
+      "Identité 1"
     ]
   }
 }

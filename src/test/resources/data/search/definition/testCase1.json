@@ -1,6 +1,8 @@
 {
+  "$schema": "../../../schema/testDefinitionSchema.json",
   "testDefinition": {
     "name": "Recherche :: Test 1",
+    "description": "Recherche test 1",
     "searchRequest": {
       "attributes": [
         {

@@ -1,0 +1,252 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "test_definition_schema",
+  "title": "TestDefinition",
+  "description": "The definition of a test",
+  "type": "object",
+  "properties": {
+    "testDefinition": {
+      "$ref": "#/$defs/test_definition"
+    }
+  },
+  "$defs": {
+    "test_attribute": {
+      "properties": {
+        "key": {
+          "description": "The key of the attribute in the database referential",
+          "enum": [
+            "key_name",
+            "fc_key",
+            "login",
+            "gender",
+            "preferred_username",
+            "family_name",
+            "first_name",
+            "birthplace",
+            "birthdate",
+            "birthcountry",
+            "address",
+            "address_detail",
+            "address_postal_code",
+            "address_city",
+            "email",
+            "mobile_phone",
+            "fixed_phone",
+            "birthplace_code",
+            "birthcountry_code"
+          ]
+        },
+        "value": {
+          "description": "The value of the attribute in the identity",
+          "type": "string"
+        },
+        "type": {
+          "description": "The type of the attribute in the database referential",
+          "enum": ["string"]
+        },
+        "certificationLevel": {
+          "description": "The level of certification of the attribute",
+          "type": "integer"
+        },
+        "certifier": {
+          "description": "The code of the processus that certifies the attribute",
+          "type": "string"
+        },
+        "certificationDate": {
+          "description": "The date of the attribute certification",
+          "type": "string"
+        }
+      },
+      "required": [
+        "key",
+        "value",
+        "type"
+      ]
+    },
+    "test_identity": {
+      "properties": {
+        "name": {
+          "description": "The name of the identity resource",
+          "type": "string"
+        },
+        "attributes": {
+          "description": "The list of identity's attributes",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/test_attribute"
+          }
+        }
+      },
+      "required": [
+        "attributes"
+      ]
+    },
+    "test_duplicate_rule_attribute_treatment": {
+      "properties": {
+        "attributeKeys": {
+          "description": "The list of attribute keys of the specific treatment",
+          "type": "array",
+          "items": {
+            "enum": [
+              "key_name",
+              "fc_key",
+              "login",
+              "gender",
+              "preferred_username",
+              "family_name",
+              "first_name",
+              "birthplace",
+              "birthdate",
+              "birthcountry",
+              "address",
+              "address_detail",
+              "address_postal_code",
+              "address_city",
+              "email",
+              "mobile_phone",
+              "fixed_phone",
+              "birthplace_code",
+              "birthcountry_code"
+            ]
+          }
+        },
+        "type": {
+          "description": "The type of treatment to apply",
+          "enum": [
+            "DIFFERENT",
+            "APPROXIMATED",
+            "STRICTLY_APPROXIMATED",
+            "STRICT",
+            "ABSENT"
+          ]
+        }
+      },
+      "required": [
+        "attributeKeys",
+        "type"
+      ]
+    },
+    "test_duplicate_rule": {
+      "properties": {
+        "name": {
+          "description": "The name of the rule",
+          "type": "string"
+        },
+        "code": {
+          "description": "The code of the rule",
+          "type": "string"
+        },
+        "nbFilledAttributes": {
+          "description": "The number of filled attribute the identities shall contain to be eligible to the rule",
+          "type": "integer"
+        },
+        "nbEqualAttributes": {
+          "description": "The number of attributes that must be equal in the matched identity",
+          "type": "integer"
+        },
+        "nbMissingAttributes": {
+          "description": "The number of attributes that must be absent in the matched identity",
+          "type": "integer"
+        },
+        "priority": {
+          "description": "The execution order of the rule within the list of rules",
+          "type": "integer"
+        },
+        "active": {
+          "description": "Defines if the rule is active so that it can be used by the daemon",
+          "type": "boolean"
+        },
+        "daemon": {
+          "description": "Defines if the rule is usable by the daemon",
+          "type": "boolean"
+        },
+        "checkedAttributes": {
+          "description": "The list of attributes impacted by the rule",
+          "type": "array",
+          "items": {
+            "enum": [
+              "key_name",
+              "fc_key",
+              "login",
+              "gender",
+              "preferred_username",
+              "family_name",
+              "first_name",
+              "birthplace",
+              "birthdate",
+              "birthcountry",
+              "address",
+              "address_detail",
+              "address_postal_code",
+              "address_city",
+              "email",
+              "mobile_phone",
+              "fixed_phone",
+              "birthplace_code",
+              "birthcountry_code"
+            ]
+          }
+        },
+        "attributeTreatments": {
+          "description": "The list of specific attributes treatments",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/test_duplicate_rule_attribute_treatment"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "code",
+        "nbFilledAttributes",
+        "nbEqualAttributes",
+        "nbMissingAttributes",
+        "active",
+        "daemon",
+        "priority",
+        "checkedAttributes"
+      ]
+    },
+    "test_definition": {
+      "properties": {
+        "name": {
+          "description": "The name of the Test definition",
+          "type": "string"
+        },
+        "description": {
+          "description": "The description of the Test definition",
+          "type": "string"
+        },
+        "duplicateRule": {
+          "description": "The duplicate rule to test",
+          "$ref": "#/$defs/test_duplicate_rule"
+        },
+        "searchRequest": {
+          "description": "The name of the Test definition",
+          "$ref": "#/$defs/test_identity"
+        },
+        "inputs": {
+          "description": "The list of Identities to be created during test initialisation",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/test_identity"
+          }
+        },
+        "expected": {
+          "description": "The list of Identities the shall be matched by the test",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "description",
+        "searchRequest",
+        "inputs",
+        "expected"
+      ]
+    }
+  }
+}

@@ -1,4 +1,5 @@
 {
+  "$schema": "../../../schema/testDefinitionSchema.json",
   "testDefinition": {
     "name": "RG_GEN_SuspectDoublon_04",
     "description": "5 attributs égaux + 2 différents",
@@ -23,21 +24,21 @@
       "attributeTreatments": [
         {
           "type": "DIFFERENT",
-          "attributes": [
+          "attributeKeys": [
             "gender",
             "preferred_username"
           ]
         },
         {
           "type": "DIFFERENT",
-          "attributes": [
+          "attributeKeys": [
             "gender",
             "first_name"
           ]
         },
         {
           "type": "DIFFERENT",
-          "attributes": [
+          "attributeKeys": [
             "birthplace_code",
             "first_name"
           ]

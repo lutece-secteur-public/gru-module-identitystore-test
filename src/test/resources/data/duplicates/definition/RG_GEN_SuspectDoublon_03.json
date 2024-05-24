@@ -1,4 +1,5 @@
 {
+  "$schema": "../../../schema/testDefinitionSchema.json",
   "testDefinition": {
     "name": "RG_GEN_SuspectDoublon_03",
     "description": "6 attributs égaux + 1 différent",
@@ -23,61 +24,61 @@
       "attributeTreatments": [
         {
           "type": "DIFFERENT",
-          "attributes": [
+          "attributeKeys": [
             "gender"
           ]
         },
         {
           "type": "DIFFERENT",
-          "attributes": [
+          "attributeKeys": [
             "birthdate"
           ]
         },
         {
           "type": "DIFFERENT",
-          "attributes": [
+          "attributeKeys": [
             "preferred_username"
           ]
         },
         {
           "type": "DIFFERENT",
-          "attributes": [
+          "attributeKeys": [
             "family_name"
           ]
         },
         {
           "type": "DIFFERENT",
-          "attributes": [
+          "attributeKeys": [
             "first_name"
           ]
         },
         {
           "type": "DIFFERENT",
-          "attributes": [
+          "attributeKeys": [
             "birthplace_code"
           ]
         },
         {
           "type": "DIFFERENT",
-          "attributes": [
+          "attributeKeys": [
             "birthcountry_code"
           ]
         },
         {
           "type": "APPROXIMATED",
-          "attributes": [
+          "attributeKeys": [
             "preferred_username"
           ]
         },
         {
           "type": "APPROXIMATED",
-          "attributes": [
+          "attributeKeys": [
             "first_name"
           ]
         },
         {
           "type": "APPROXIMATED",
-          "attributes": [
+          "attributeKeys": [
             "family_name"
           ]
         }

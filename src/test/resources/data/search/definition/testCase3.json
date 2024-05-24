@@ -1,4 +1,5 @@
 {
+  "$schema": "../../../schema/testDefinitionSchema.json",
   "testDefinition": {
     "name": "Recherche :: Test 3",
     "searchRequest": {

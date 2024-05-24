@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "test.identity.schema.json",
+  "title": "TestIdentity",
+  "description": "An identity used as a test resource",
+  "type": "object",
+  "properties": {
+    "name": {
+      "description": "The name of the identity resource",
+      "type": "string"
+    },
+    "attributes": {
+      "description": "The list of identity's attributes",
+      "type": "array",
+      "items": {
+        "$ref": "test.attribute.schema.json"
+      }
+    }
+  },
+  "required": ["attributes"]
+}

@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestDuplicateRuleAttributeTreatment {
-    private List<String> attributes = new ArrayList<>( );
+    private List<String> attributeKeys = new ArrayList<>( );
     private String type;
 
-    public List<String> getAttributes() {
-        return attributes;
+    public List<String> getAttributeKeys() {
+        return attributeKeys;
     }
 
-    public void setAttributes(List<String> attributes) {
-        this.attributes = attributes;
+    public void setAttributeKeys(List<String> attributeKeys) {
+        this.attributeKeys = attributeKeys;
     }
 
     public String getType() {

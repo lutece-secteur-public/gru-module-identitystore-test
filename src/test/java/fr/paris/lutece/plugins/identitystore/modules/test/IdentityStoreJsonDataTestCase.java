@@ -305,7 +305,7 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
         }).collect(Collectors.toList()));
         duplicateRule.setAttributeTreatments(testDuplicateRule.getAttributeTreatments().stream().map(treatment -> {
             final DuplicateRuleAttributeTreatment attributeTreatment = new DuplicateRuleAttributeTreatment( );
-            attributeTreatment.setAttributes(treatment.getAttributes().stream().map(key -> {
+            attributeTreatment.setAttributes(treatment.getAttributeKeys().stream().map(key -> {
                 try {
                     return IdentityAttributeService.instance().getAttributeKey(key);
                 } catch (IdentityAttributeNotFoundException e) {

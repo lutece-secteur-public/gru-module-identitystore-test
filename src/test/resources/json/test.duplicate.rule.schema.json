@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "test.duplicate.rule.schema.json",
+  "title": "TestDuplicateRule",
+  "description": "A rule that defines the type of Identity duplicate(s) the user wants to detect",
+  "type": "object",
+  "properties": {
+    "name": {
+      "description": "The name of the rule",
+      "type": "string"
+    },
+    "code": {
+      "description": "The code of the rule",
+      "type": "string"
+    },
+    "nbFilledAttributes": {
+      "description": "The number of filled attribute the identities shall contain to be eligible to the rule",
+      "type": "integer"
+    },
+    "nbEqualAttributes": {
+      "description": "The number of attributes that must be equal in the matched identity",
+      "type": "integer"
+    },
+    "nbMissingAttributes": {
+      "description": "The number of attributes that must be absent in the matched identity",
+      "type": "integer"
+    },
+    "priority": {
+      "description": "The execution order of the rule within the list of rules",
+      "type": "integer"
+    },
+    "active": {
+      "description": "Defines if the rule is active so that it can be used by the daemon",
+      "type": "boolean"
+    },
+    "daemon": {
+      "description": "Defines if the rule is usable by the daemon",
+      "type": "boolean"
+    },
+    "checkedAttributes": {
+      "description": "The list of attributes impacted by the rule",
+      "type": "array",
+      "items": {
+        "$ref": "test.attribute.key.schema.json"
+      }
+    },
+    "attributeTreatments": {
+      "description": "The list of specific attributes treatments",
+      "type": "array",
+      "items": {
+        "$ref": "test.duplicate.rule.attribute.treatment.schema.json"
+      }
+    }
+  },
+  "required": [
+    "name",
+    "code",
+    "nbFilledAttributes",
+    "nbEqualAttributes",
+    "nbMissingAttributes",
+    "active",
+    "daemon",
+    "priority",
+    "checkedAttributes"
+  ]
+}

@@ -34,13 +34,11 @@
 package fr.paris.lutece.plugins.identitystore.modules.test.data;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonRootName;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @JsonInclude( JsonInclude.Include.NON_NULL )
-@JsonRootName( "testDefinition" )
 public class TestDefinition
 {
     private String name;

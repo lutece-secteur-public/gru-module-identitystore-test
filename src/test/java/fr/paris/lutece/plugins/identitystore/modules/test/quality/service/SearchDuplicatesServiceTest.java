@@ -36,16 +36,11 @@ package fr.paris.lutece.plugins.identitystore.modules.test.quality.service;
 import fr.paris.lutece.plugins.identitystore.business.rules.duplicate.DuplicateRule;
 import fr.paris.lutece.plugins.identitystore.modules.quality.service.SearchDuplicatesService;
 import fr.paris.lutece.plugins.identitystore.modules.test.IdentityStoreJsonDataTestCase;
-import fr.paris.lutece.plugins.identitystore.modules.test.IdentityStoreTestContext;
 import fr.paris.lutece.plugins.identitystore.modules.test.data.TestDefinition;
 import fr.paris.lutece.plugins.identitystore.modules.test.data.TestIdentity;
 import fr.paris.lutece.plugins.identitystore.service.duplicate.DuplicateRuleService;
-import fr.paris.lutece.plugins.identitystore.service.identity.IdentityService;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.ResponseStatusType;
-import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.crud.IdentityChangeResponse;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.DuplicateSearchResponse;
-import fr.paris.lutece.plugins.identitystore.web.exception.IdentityStoreException;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.util.Collections;
 import java.util.List;
@@ -61,26 +56,16 @@ public class SearchDuplicatesServiceTest extends IdentityStoreJsonDataTestCase
     }
 
     @Override
-    protected void runDefinition( final TestDefinition testDefinition ) throws Exception
+    protected List<TestIdentity> runDefinition(final TestDefinition testDefinition ) throws Exception
     {
-        System.out.println( "----- Init test data -----" );
-        testDefinition.getInputs( ).stream( )
-                .map( testIdentity -> new ImmutablePair<>( testIdentity.getName( ), this.toIdentityChangeRequest( testIdentity ) ) ).forEach( pair -> {
-                    try
-                    {
-                        final IdentityChangeResponse response = new IdentityChangeResponse( );
-                        IdentityService.instance( ).create( pair.getRight( ), this.getAuthor( ), IdentityStoreTestContext.SAMPLE_APPCODE, response );
-                        if ( response.getStatus( ).getType( ) != ResponseStatusType.SUCCESS )
-                        {
-                            System.out.println( "Erreur lors de la création de " + pair.getLeft( ) + " :: Status " + response.getStatus( ) + " :: Message "
-                                    + response.getStatus( ).getMessage( ) );
-                        }
-                    }
-                    catch( IdentityStoreException e )
-                    {
-                        throw new RuntimeException( e );
-                    }
-                } );
+        System.out.println( "[Create duplicate rule " + testDefinition.getDuplicateRule().getCode() + "]" );
+        System.out.println("Checked attributes: " + String.join(", ", testDefinition.getDuplicateRule().getCheckedAttributes()));
+        System.out.println("Number of filled attributes in the tested identity: " + testDefinition.getDuplicateRule().getNbFilledAttributes());
+        System.out.println("Number of attributes that must be equal in the result identities: " + testDefinition.getDuplicateRule().getNbEqualAttributes());
+        System.out.println("Number of attributes that can be absent in the result identities: " + testDefinition.getDuplicateRule().getNbMissingAttributes());
+        testDefinition.getDuplicateRule().getAttributeTreatments().forEach(attributeTreatment -> {
+            System.out.println( "Attribute treatment: " + attributeTreatment.getType() + " - " + String.join("", attributeTreatment.getAttributeKeys()));
+        });
         final DuplicateRule duplicateRule = DuplicateRuleService.instance().create(this.toDuplicateRule(testDefinition.getDuplicateRule()));
         if(duplicateRule == null) {
             throw new RuntimeException("Could not create duplicate rule " + testDefinition.getDuplicateRule( ).getName( ) );
@@ -93,11 +78,9 @@ public class SearchDuplicatesServiceTest extends IdentityStoreJsonDataTestCase
         System.out.println("\n[Duplicate search response status]\n " + response.getStatus().getHttpCode() + " - " + response.getStatus().getType().name() + " - " + response.getStatus().getMessage( ) );
         if( ResponseStatusType.OK == response.getStatus().getType() )
         {
-            System.out.println("\n[Duplicate search response identities]\n" + response.getIdentities().stream().map(identityDto -> identityDto.getAttributes().stream().map(attribute -> attribute.getKey() + "=" + attribute.getValue( )).collect(Collectors.joining(", "))).collect(Collectors.joining("\n")));
+            System.out.println("\n[Duplicate search response identities]\n" + response.getIdentities().stream().map(identityDto -> identityDto.getCustomerId() + " - " + identityDto.getAttributes().stream().map(attribute -> attribute.getKey() + "=" + attribute.getValue( )).collect(Collectors.joining(", "))).collect(Collectors.joining("\n")));
             System.out.println("\n[Duplicate search response metadata]\n" + response.getMetadata().entrySet().stream().map(entry -> entry.getKey() + " -> " + entry.getValue( ) ).collect( Collectors.joining( "\n" ) ) );
-
         }
-        final List<TestIdentity> result = response.getIdentities( ).stream( ).map( this::toTestIdentity ).collect( Collectors.toList( ) );
-        results.put( testDefinition.getName( ), this.getTestResult( result, testDefinition ) );
+        return response.getIdentities( ).stream( ).map( this::toTestIdentity ).collect( Collectors.toList( ) );
     }
 }

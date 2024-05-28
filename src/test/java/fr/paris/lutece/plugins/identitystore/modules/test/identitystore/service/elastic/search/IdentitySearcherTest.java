@@ -39,11 +39,7 @@ import fr.paris.lutece.plugins.identitystore.modules.test.data.TestDefinition;
 import fr.paris.lutece.plugins.identitystore.modules.test.data.TestIdentity;
 import fr.paris.lutece.plugins.identitystore.service.contract.ServiceContractNotFoundException;
 import fr.paris.lutece.plugins.identitystore.service.identity.IdentityService;
-import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.ResponseStatusType;
-import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.crud.IdentityChangeResponse;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.IdentitySearchResponse;
-import fr.paris.lutece.plugins.identitystore.web.exception.IdentityStoreException;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,26 +54,8 @@ public class IdentitySearcherTest extends IdentityStoreJsonDataTestCase
     }
 
     @Override
-    protected void runDefinition( final TestDefinition testDefinition ) throws Exception
+    protected List<TestIdentity> runDefinition(final TestDefinition testDefinition ) throws Exception
     {
-        System.out.println( "----- Init test data -----" );
-        testDefinition.getInputs( ).stream( )
-                .map( testIdentity -> new ImmutablePair<>( testIdentity.getName( ), this.toIdentityChangeRequest( testIdentity ) ) ).forEach( pair -> {
-                    try
-                    {
-                        final IdentityChangeResponse response = new IdentityChangeResponse( );
-                        IdentityService.instance( ).create( pair.getRight( ), this.getAuthor( ), IdentityStoreTestContext.SAMPLE_APPCODE, response );
-                        if ( response.getStatus( ).getType( ) != ResponseStatusType.SUCCESS )
-                        {
-                            System.out.println( "Erreur lors de la création de " + pair.getLeft( ) + " :: Status " + response.getStatus( ) + " :: Message "
-                                    + response.getStatus( ).getMessage( ) );
-                        }
-                    }
-                    catch( IdentityStoreException e )
-                    {
-                        throw new RuntimeException( e );
-                    }
-                } );
         System.out.println( "----- Execute search request -----" );
         Thread.sleep( 1000 );
         final IdentitySearchResponse identitySearchResponse = new IdentitySearchResponse( );
@@ -90,7 +68,6 @@ public class IdentitySearcherTest extends IdentityStoreJsonDataTestCase
         {
             throw new RuntimeException( e );
         }
-        final List<TestIdentity> result = identitySearchResponse.getIdentities( ).stream( ).map( this::toTestIdentity ).collect( Collectors.toList( ) );
-        results.put( testDefinition.getName( ), this.getTestResult( result, testDefinition ) );
+        return identitySearchResponse.getIdentities( ).stream( ).map( this::toTestIdentity ).collect( Collectors.toList( ) );
     }
 }

@@ -38,6 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import fr.paris.lutece.plugins.identitystore.business.rules.duplicate.DuplicateRule;
 import fr.paris.lutece.plugins.identitystore.business.rules.duplicate.DuplicateRuleAttributeTreatment;
+import fr.paris.lutece.plugins.identitystore.modules.test.data.IdentityStoreTest;
 import fr.paris.lutece.plugins.identitystore.modules.test.data.TestAttribute;
 import fr.paris.lutece.plugins.identitystore.modules.test.data.TestDefinition;
 import fr.paris.lutece.plugins.identitystore.modules.test.data.TestDuplicateRule;
@@ -46,15 +47,20 @@ import fr.paris.lutece.plugins.identitystore.modules.test.util.FileNameAlphanume
 import fr.paris.lutece.plugins.identitystore.modules.test.util.StringAlphanumericComparator;
 import fr.paris.lutece.plugins.identitystore.service.attribute.IdentityAttributeService;
 import fr.paris.lutece.plugins.identitystore.service.identity.IdentityAttributeNotFoundException;
+import fr.paris.lutece.plugins.identitystore.service.identity.IdentityService;
 import fr.paris.lutece.plugins.identitystore.service.indexer.elastic.index.service.IdentityIndexer;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.AttributeDto;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.AttributeTreatmentType;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.IdentityDto;
+import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.ResponseStatusType;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.crud.IdentityChangeRequest;
+import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.crud.IdentityChangeResponse;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.IdentitySearchRequest;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.SearchAttribute;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.SearchDto;
+import fr.paris.lutece.plugins.identitystore.web.exception.IdentityStoreException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -70,6 +76,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -84,6 +91,10 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
     private static final String PROTOCOL = "http://";
     protected final Map<String, Pair<Boolean, String>> results = new HashMap<>( );
     protected final Set<File> testDefinitions = new HashSet<>( );
+    protected final ObjectMapper mapper = new ObjectMapper( )
+            .enable( SerializationFeature.INDENT_OUTPUT )
+            .disable( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES );
+    protected final List<String> inputsFilter = Arrays.stream(System.getProperty("inputs", "").split(",")).filter(StringUtils::isNotEmpty).collect(Collectors.toList());
 
     @Override
     protected void preInitApplication( ) throws Exception
@@ -98,7 +109,7 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
             @Override
             public FileVisitResult visitFile( Path path, BasicFileAttributes attrs )
             {
-                if ( !Files.isDirectory( path ) && jsonMatcher.matches( path ) )
+                if ( !Files.isDirectory( path ) && jsonMatcher.matches( path ) && (inputsFilter.isEmpty() || inputsFilter.contains(path.getFileName().toString())) )
                 {
                     testDefinitions.add( path.toFile( ) );
                 }
@@ -111,28 +122,41 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
 
     public void test( )
     {
-
         if ( !testDefinitions.isEmpty() )
         {
-            final ObjectMapper mapper = new ObjectMapper( );
-            mapper.enable( SerializationFeature.INDENT_OUTPUT );
-            mapper.enable( SerializationFeature.WRAP_ROOT_VALUE );
-            mapper.enable( DeserializationFeature.UNWRAP_ROOT_VALUE );
-            mapper.disable( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES );
-
             testDefinitions.stream( ).sorted( FileNameAlphanumericComparator.createStringComparator() ).forEach(file -> {
                 try
                 {
-                    final TestDefinition testDefinition = mapper.readValue( file, TestDefinition.class );
-                    if ( testDefinition != null )
+                    final IdentityStoreTest identityStoreTest = mapper.readValue( file, IdentityStoreTest.class );
+                    if ( identityStoreTest != null && identityStoreTest.getTestDefinition() != null )
                     {
                         System.out.println( "----------------------------------------------------------------------" );
-                        System.out.println( "----- Running test definition: " + testDefinition.getName( ) + " -----" );
+                        System.out.println( "----- Running test definition: " + identityStoreTest.getTestDefinition().getName( ) + " -----" );
                         System.out.println( "----------------------------------------------------------------------" );
                         System.out.println();
-                        System.out.println( "Description: " + testDefinition.getDescription( )  );
+                        System.out.println( "Description: " + identityStoreTest.getTestDefinition().getDescription( )  );
                         System.out.println();
-                        this.runDefinition( testDefinition );
+                        System.out.println( "----- Init test data -----" );
+                        identityStoreTest.getTestDefinition().getInputs( ).stream( )
+                            .map( testIdentity -> new ImmutablePair<>( testIdentity.getName( ), this.toIdentityChangeRequest( testIdentity ) ) ).forEach(pair -> {
+                                try
+                                {
+                                    System.out.println( "[Create identity " + pair.getLeft() + "]" );
+                                    System.out.println(pair.getRight().getIdentity().getAttributes().stream().map(a -> a.getKey() + "=" + a.getValue( ) ).collect( Collectors.joining( ", " ) ));
+                                    final IdentityChangeResponse response = new IdentityChangeResponse( );
+                                    IdentityService.instance( ).create( pair.getRight( ), this.getAuthor( ), IdentityStoreTestContext.SAMPLE_APPCODE, response );
+                                    System.out.println("Status: " + response.getStatus().getHttpCode() + " - " + response.getStatus().getType());
+                                    System.out.println("CUID: " + response.getCustomerId());
+                                    System.out.println("Message: " + response.getStatus().getMessage());
+                                    System.out.println();
+                                }
+                                catch( IdentityStoreException e )
+                                {
+                                    throw new RuntimeException( e );
+                                }
+                            } );
+                        final List<TestIdentity> result = this.runDefinition(identityStoreTest.getTestDefinition());
+                        results.put( identityStoreTest.getTestDefinition().getName( ), this.getTestResult( result, identityStoreTest.getTestDefinition() ) );
                         System.out.println();
                         System.out.println( "----- Clear test data -----" );
                         this.clearData( );
@@ -140,7 +164,7 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
                     }
                     else
                     {
-                        throw new RuntimeException( "ERROR " + file.getName( ) + " : JSON is empty" );
+                        throw new RuntimeException( "ERROR " + file.getName( ) + " : JSON is empty or malformed" );
                     }
                 }
                 catch( Exception e )
@@ -224,7 +248,7 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
         return inputs.stream().filter(expected -> expected.equals(result)).map(TestIdentity::getName).findFirst().orElse("not found");
     }
 
-    protected abstract void runDefinition( TestDefinition testDefinition ) throws Exception;
+    protected abstract List<TestIdentity> runDefinition(TestDefinition testDefinition ) throws Exception;
 
     protected void clearData( ) throws Exception
     {
@@ -232,7 +256,9 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
         System.out.println( "----- Truncate BDD tables -----" );
         final DataSource ds = getDataSource( );
         try ( final Statement statement = ds.getConnection( ).createStatement( ) ) {
-            statement.execute("truncate table identitystore_identity, identitystore_identity_history, identitystore_identity_attribute, identitystore_identity_attribute_certificate, identitystore_identity_attribute_history, identitystore_index_action;" );
+            final String sql = "truncate table identitystore_identity, identitystore_identity_history, identitystore_identity_attribute, identitystore_identity_attribute_certificate, identitystore_identity_attribute_history, identitystore_index_action;";
+            System.out.println("[Request]\n" + sql + "\n");
+            statement.execute(sql);
         }
 
         /* Clean ES index */

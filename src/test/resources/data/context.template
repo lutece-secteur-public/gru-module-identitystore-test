@@ -96,7 +96,4 @@
     <bean id="identitystore.referentielRest" class="fr.paris.lutece.plugins.identitystore.v3.web.rs.ReferentielRestService" />
     <bean id="identitystore.historyRest" class="fr.paris.lutece.plugins.identitystore.v3.web.rs.HistoryRestService" />
 
-    <bean id="identitystore.elasticsearch.retryService" class="fr.paris.lutece.plugins.identitystore.service.indexer.elastic.index.service.RetryService" >
-        </bean>
-
 </beans>

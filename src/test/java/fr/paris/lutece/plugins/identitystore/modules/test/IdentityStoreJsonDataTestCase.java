@@ -52,7 +52,6 @@ import fr.paris.lutece.plugins.identitystore.service.indexer.elastic.index.servi
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.AttributeDto;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.AttributeTreatmentType;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.IdentityDto;
-import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.ResponseStatusType;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.crud.IdentityChangeRequest;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.crud.IdentityChangeResponse;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.IdentitySearchRequest;
@@ -74,7 +73,7 @@ import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.sql.Statement;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -120,11 +119,11 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
 
     protected abstract String getTestDataPath( );
 
-    public void test( )
-    {
+    public void test( ) throws Exception {
+        this.beforeTest();
         if ( !testDefinitions.isEmpty() )
         {
-            testDefinitions.stream( ).sorted( FileNameAlphanumericComparator.createStringComparator() ).forEach(file -> {
+            testDefinitions.stream( ).sorted( FileNameAlphanumericComparator.createStringComparator( ) ).forEach(file -> {
                 try
                 {
                     final IdentityStoreTest identityStoreTest = mapper.readValue( file, IdentityStoreTest.class );
@@ -178,6 +177,8 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
         }
     }
 
+    protected abstract void beforeTest() throws Exception;
+
     private void displayResult( final String result ) {
         final String trace = result + " :: " + (results.get(result).getLeft() ? "OK" : "KO") + "\n" + results.get(result).getRight() + "\n";
         System.out.println(trace);
@@ -204,7 +205,7 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
         message.append("\nListe des identités attendues pour la réussite du test : ")
                 .append(String.join(", ", testDefinition.getExpected()))
                 .append("\nListe des identités retournées par le test : ")
-                .append(results.stream().map(result -> this.getNameFromInputs(result, testDefinition.getInputs())).collect(Collectors.joining(", ")));
+                .append(results.stream().map(result -> this.getNameFromInputs(result, testDefinition.getInputs())).sorted().collect(Collectors.joining(", ")));
 
         // If there is more results than expected by the test definition, calculate how much more there is
         if ( results.size( ) > testDefinition.getExpected( ).size( ) )
@@ -218,7 +219,7 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
             if ( results.size( ) < testDefinition.getExpected( ).size( ) )
             {
                 expectedTestIdentities.removeAll( results );
-                message.append("\nLa liste des identités attendues pour la réussite du test contient ").append(expectedTestIdentities.size()).append(" identité(s) qui n'ont pas été retournée(s) par le test.");
+                message.append("\nLa liste des identités attendues pour la réussite du test contient ").append(expectedTestIdentities.size()).append(" identité(s) qui n'ont pas été retournée(s) par le test: ").append( expectedTestIdentities.stream( ).map( TestIdentity::getName ).sorted( ).collect( Collectors.joining( ", " ) ) );
                 return new MutablePair<>( false, message.toString() );
             }
             else
@@ -233,7 +234,7 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
                 }
                 else // Same size but different identities, our test is KO :(
                 {
-                    message.append("\nLa liste des identités attendues pour la réussite du test contient ").append(expectedTestIdentities.size()).append(" identité(s) qui n'ont pas été retournée(s) par le test.");
+                    message.append("\nLa liste des identités attendues pour la réussite du test contient ").append(expectedTestIdentities.size()).append(" identité(s) qui n'ont pas été retournée(s) par le test: ").append( expectedTestIdentities.stream( ).map( TestIdentity::getName ).sorted( ).collect( Collectors.joining( ", " ) ) );
                     resultCopy.removeAll( expectedCopy );
                     if ( !resultCopy.isEmpty( ) )
                     {
@@ -255,10 +256,10 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
         /* Clean BDD tables */
         System.out.println( "----- Truncate BDD tables -----" );
         final DataSource ds = getDataSource( );
-        try ( final Statement statement = ds.getConnection( ).createStatement( ) ) {
+        try ( final Connection connection = ds.getConnection() ) {
             final String sql = "truncate table identitystore_identity, identitystore_identity_history, identitystore_identity_attribute, identitystore_identity_attribute_certificate, identitystore_identity_attribute_history, identitystore_index_action;";
             System.out.println("[Request]\n" + sql + "\n");
-            statement.execute(sql);
+            connection.prepareStatement(sql).executeUpdate( );
         }
 
         /* Clean ES index */
@@ -346,7 +347,7 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
         return duplicateRule;
     }
 
-    protected IdentitySearchRequest toIdentitySearchRequest(final TestIdentity testIdentity )
+    protected IdentitySearchRequest toIdentitySearchRequest(final TestIdentity testIdentity, final boolean withSearchType )
     {
         final IdentitySearchRequest identitySearchRequest = new IdentitySearchRequest( );
         final SearchDto search = new SearchDto( );
@@ -357,8 +358,15 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
             search.getAttributes( ).add( searchAttributeDto );
             searchAttributeDto.setKey( testAttribute.getKey( ) );
             searchAttributeDto.setValue( testAttribute.getValue( ) );
-            final boolean strict = !StringUtils.equalsAny( testAttribute.getKey( ), "first_name", "family_name", "preferred_username" );
-            searchAttributeDto.setTreatmentType( strict ? AttributeTreatmentType.STRICT : AttributeTreatmentType.APPROXIMATED );
+            if( withSearchType && testAttribute.getSearchType() != null )
+            {
+                searchAttributeDto.setTreatmentType(testAttribute.getSearchType());
+            }
+            else
+            {
+                final boolean strict = !StringUtils.equalsAny( testAttribute.getKey( ), "first_name", "family_name", "preferred_username" );
+                searchAttributeDto.setTreatmentType( strict ? AttributeTreatmentType.STRICT : AttributeTreatmentType.APPROXIMATED );
+            }
         } );
         return identitySearchRequest;
     }

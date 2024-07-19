@@ -34,6 +34,7 @@
 package fr.paris.lutece.plugins.identitystore.modules.test.data;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.AttributeTreatmentType;
 
 import java.util.Date;
 import java.util.Objects;
@@ -55,6 +56,11 @@ public class TestAttribute
      * Type de l'attribut
      */
     protected String type;
+
+    /**
+     * Type de recherche à appliquer
+     */
+    protected AttributeTreatmentType searchType;
 
     /**
      * Niveau du processus de certification
@@ -99,6 +105,14 @@ public class TestAttribute
     public void setType( String type )
     {
         this.type = type;
+    }
+
+    public AttributeTreatmentType getSearchType() {
+        return searchType;
+    }
+
+    public void setSearchType(AttributeTreatmentType searchType) {
+        this.searchType = searchType;
     }
 
     public Integer getCertificationLevel( )

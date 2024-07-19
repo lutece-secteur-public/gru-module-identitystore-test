@@ -1,0 +1,273 @@
+{
+  "$schema": "../../../schema/testDefinitionSchema.json",
+  "testDefinition": {
+    "name": "Recherche :: Prénoms :: Différence 05",
+    "description": "Vérification de la règle des égalités de prénoms.\n CF. https://dev.lutece.paris.fr/bugtracker/issues/28157.\nReq difference-05",
+    "searchRequest": {
+      "attributes": [
+        {
+          "key": "first_name",
+          "value": "Pierre Pascale",
+          "type": "string",
+          "searchType": "DIFFERENT"
+        }
+      ]
+    },
+    "inputs": [
+      {
+        "name": "Identité 1",
+        "attributes": [
+          {
+            "key": "family_name",
+            "value": "Dupont",
+            "type": "string"
+          },
+          {
+            "key": "first_name",
+            "value": "Jean",
+            "type": "string"
+          },
+          {
+            "key": "birthdate",
+            "value": "01/01/2002",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Identité 2",
+        "attributes": [
+          {
+            "key": "family_name",
+            "value": "Dupont",
+            "type": "string"
+          },
+          {
+            "key": "first_name",
+            "value": "Pascal Jean",
+            "type": "string"
+          },
+          {
+            "key": "birthdate",
+            "value": "01/01/2002",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Identité 3",
+        "attributes": [
+          {
+            "key": "family_name",
+            "value": "Dupont",
+            "type": "string"
+          },
+          {
+            "key": "first_name",
+            "value": "Jean Pascal",
+            "type": "string"
+          },
+          {
+            "key": "birthdate",
+            "value": "01/01/2002",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Identité 4",
+        "attributes": [
+          {
+            "key": "family_name",
+            "value": "Dupont",
+            "type": "string"
+          },
+          {
+            "key": "first_name",
+            "value": "Jean Pascale",
+            "type": "string"
+          },
+          {
+            "key": "birthdate",
+            "value": "01/01/2002",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Identité 5",
+        "attributes": [
+          {
+            "key": "family_name",
+            "value": "Dupont",
+            "type": "string"
+          },
+          {
+            "key": "first_name",
+            "value": "Jan",
+            "type": "string"
+          },
+          {
+            "key": "birthdate",
+            "value": "01/01/2002",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Identité 6",
+        "attributes": [
+          {
+            "key": "family_name",
+            "value": "Dupont",
+            "type": "string"
+          },
+          {
+            "key": "first_name",
+            "value": "Pascal Jan",
+            "type": "string"
+          },
+          {
+            "key": "birthdate",
+            "value": "01/01/2002",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Identité 7",
+        "attributes": [
+          {
+            "key": "family_name",
+            "value": "Dupont",
+            "type": "string"
+          },
+          {
+            "key": "first_name",
+            "value": "Jean-Pascal",
+            "type": "string"
+          },
+          {
+            "key": "birthdate",
+            "value": "01/01/2002",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Identité 8",
+        "attributes": [
+          {
+            "key": "family_name",
+            "value": "Dupont",
+            "type": "string"
+          },
+          {
+            "key": "first_name",
+            "value": "Jeanne",
+            "type": "string"
+          },
+          {
+            "key": "birthdate",
+            "value": "01/01/2002",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Identité 9",
+        "attributes": [
+          {
+            "key": "family_name",
+            "value": "Dupont",
+            "type": "string"
+          },
+          {
+            "key": "first_name",
+            "value": "Pascal",
+            "type": "string"
+          },
+          {
+            "key": "birthdate",
+            "value": "01/01/2002",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Identité 10",
+        "attributes": [
+          {
+            "key": "family_name",
+            "value": "Dupont",
+            "type": "string"
+          },
+          {
+            "key": "first_name",
+            "value": "Jean Pascal Thierry",
+            "type": "string"
+          },
+          {
+            "key": "birthdate",
+            "value": "01/01/2002",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Identité 11",
+        "attributes": [
+          {
+            "key": "family_name",
+            "value": "Dupont",
+            "type": "string"
+          },
+          {
+            "key": "first_name",
+            "value": "Jean Pascal Jérémie",
+            "type": "string"
+          },
+          {
+            "key": "birthdate",
+            "value": "01/01/2002",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Identité 12",
+        "attributes": [
+          {
+            "key": "family_name",
+            "value": "Dupont",
+            "type": "string"
+          },
+          {
+            "key": "first_name",
+            "value": "Jean Jérémie Pascal",
+            "type": "string"
+          },
+          {
+            "key": "birthdate",
+            "value": "01/01/2002",
+            "type": "string"
+          }
+        ]
+      }
+    ],
+    "expected": [
+      "Identité 1",
+      "Identité 2",
+      "Identité 3",
+      "Identité 4",
+      "Identité 5",
+      "Identité 6",
+      "Identité 7",
+      "Identité 8",
+      "Identité 10",
+      "Identité 11",
+      "Identité 12"
+
+    ]
+  }
+}

@@ -50,6 +50,8 @@ public abstract class IdentityStoreBDDAndESTestCase extends AbstractIdentityStor
 
     public PostgreSQLContainer postgreSQLContainer;
 
+    protected HikariDataSource dataSource;
+
     /**
      * {@inheritDoc}
      */
@@ -101,11 +103,17 @@ public abstract class IdentityStoreBDDAndESTestCase extends AbstractIdentityStor
 
     protected DataSource getDataSource()
     {
-        final HikariConfig hikariConfig = new HikariConfig( );
-        hikariConfig.setJdbcUrl( postgreSQLContainer.getJdbcUrl( ) );
-        hikariConfig.setUsername( postgreSQLContainer.getUsername( ) );
-        hikariConfig.setPassword( postgreSQLContainer.getPassword( ) );
-        hikariConfig.setDriverClassName( postgreSQLContainer.getDriverClassName( ) );
-        return new HikariDataSource( hikariConfig );
+        if(dataSource == null)
+        {
+            final HikariConfig hikariConfig = new HikariConfig( );
+            hikariConfig.setJdbcUrl( postgreSQLContainer.getJdbcUrl( ) );
+            hikariConfig.setUsername( postgreSQLContainer.getUsername( ) );
+            hikariConfig.setPassword( postgreSQLContainer.getPassword( ) );
+            hikariConfig.setDriverClassName( postgreSQLContainer.getDriverClassName( ) );
+            hikariConfig.setMaximumPoolSize(1000);
+            hikariConfig.setMinimumIdle(10);
+            dataSource = new HikariDataSource(hikariConfig);
+        }
+        return dataSource;
     }
 }

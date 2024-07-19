@@ -55,6 +55,10 @@
         "certificationDate": {
           "description": "The date of the attribute certification",
           "type": "string"
+        },
+        "searchType": {
+          "description": "The type of search to apply on the attribute",
+          "type": "string"
         }
       },
       "required": [

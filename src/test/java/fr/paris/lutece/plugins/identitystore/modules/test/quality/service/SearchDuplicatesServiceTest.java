@@ -56,6 +56,11 @@ public class SearchDuplicatesServiceTest extends IdentityStoreJsonDataTestCase
     }
 
     @Override
+    protected void beforeTest() {
+
+    }
+
+    @Override
     protected List<TestIdentity> runDefinition(final TestDefinition testDefinition ) throws Exception
     {
         System.out.println( "[Create duplicate rule " + testDefinition.getDuplicateRule().getCode() + "]" );

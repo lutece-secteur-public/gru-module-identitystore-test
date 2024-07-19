@@ -54,6 +54,11 @@ public class IdentitySearcherTest extends IdentityStoreJsonDataTestCase
     }
 
     @Override
+    protected void beforeTest() throws Exception {
+
+    }
+
+    @Override
     protected List<TestIdentity> runDefinition(final TestDefinition testDefinition ) throws Exception
     {
         System.out.println( "----- Execute search request -----" );
@@ -61,7 +66,7 @@ public class IdentitySearcherTest extends IdentityStoreJsonDataTestCase
         final IdentitySearchResponse identitySearchResponse = new IdentitySearchResponse( );
         try
         {
-            IdentityService.instance( ).search( this.toIdentitySearchRequest( testDefinition.getSearchRequest( ) ), this.getAuthor( ), identitySearchResponse,
+            IdentityService.instance( ).search( this.toIdentitySearchRequest( testDefinition.getSearchRequest( ), false ), this.getAuthor( ), identitySearchResponse,
                     IdentityStoreTestContext.SAMPLE_APPCODE );
         }
         catch( ServiceContractNotFoundException e )

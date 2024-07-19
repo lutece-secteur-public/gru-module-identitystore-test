@@ -19,8 +19,6 @@
     <properties>
         <componentName>identitystore-test</componentName>
         <jiraProjectName>IDENTITYSTORETEST</jiraProjectName>
-        <testcontainers.version>1.17.6</testcontainers.version>
-        <flyway.version>9.8.1</flyway.version>
     </properties>
 
     <repositories>
@@ -47,7 +45,7 @@
         <dependency>
             <groupId>fr.paris.lutece</groupId>
             <artifactId>lutece-core</artifactId>
-            <version>[7.0.12,)</version>
+            <version>[7.0.14,)</version>
             <type>lutece-core</type>
         </dependency>
         <dependency>
@@ -85,26 +83,28 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
-            <version>${testcontainers.version}</version>
+            <version>1.20.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>elasticsearch</artifactId>
-            <version>${testcontainers.version}</version>
+            <version>1.20.0</version>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.testcontainers/postgresql -->
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
-            <version>${testcontainers.version}</version>
+            <version>1.20.0</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>${flyway.version}</version>
-            <scope>test</scope>
+            <version>10.15.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

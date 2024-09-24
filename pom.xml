@@ -76,7 +76,7 @@
         <dependency>
             <groupId>fr.paris.lutece.plugins</groupId>
             <artifactId>plugin-geocodes</artifactId>
-            <version>[1.0.4]</version>
+            <version>[1.0.4,)</version>
         </dependency>
 
         <!-- TEST -->

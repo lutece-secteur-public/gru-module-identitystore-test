@@ -36,6 +36,8 @@ package fr.paris.lutece.plugins.identitystore.modules.test;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import fr.paris.lutece.plugins.identitystore.business.contract.ServiceContract;
+import fr.paris.lutece.plugins.identitystore.business.identity.Identity;
 import fr.paris.lutece.plugins.identitystore.business.rules.duplicate.DuplicateRule;
 import fr.paris.lutece.plugins.identitystore.business.rules.duplicate.DuplicateRuleAttributeTreatment;
 import fr.paris.lutece.plugins.identitystore.modules.test.data.IdentityStoreTest;
@@ -46,18 +48,19 @@ import fr.paris.lutece.plugins.identitystore.modules.test.data.TestIdentity;
 import fr.paris.lutece.plugins.identitystore.modules.test.util.FileNameAlphanumericComparator;
 import fr.paris.lutece.plugins.identitystore.modules.test.util.StringAlphanumericComparator;
 import fr.paris.lutece.plugins.identitystore.service.attribute.IdentityAttributeService;
-import fr.paris.lutece.plugins.identitystore.service.identity.IdentityAttributeNotFoundException;
+import fr.paris.lutece.plugins.identitystore.service.contract.ServiceContractService;
 import fr.paris.lutece.plugins.identitystore.service.identity.IdentityService;
 import fr.paris.lutece.plugins.identitystore.service.indexer.elastic.index.service.IdentityIndexer;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.AttributeDto;
+import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.AttributeStatus;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.AttributeTreatmentType;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.IdentityDto;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.crud.IdentityChangeRequest;
-import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.crud.IdentityChangeResponse;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.IdentitySearchRequest;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.SearchAttribute;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.SearchDto;
 import fr.paris.lutece.plugins.identitystore.web.exception.IdentityStoreException;
+import fr.paris.lutece.plugins.identitystore.web.exception.ResourceNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -142,11 +145,20 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
                                 {
                                     System.out.println( "[Create identity " + pair.getLeft() + "]" );
                                     System.out.println(pair.getRight().getIdentity().getAttributes().stream().map(a -> a.getKey() + "=" + a.getValue( ) ).collect( Collectors.joining( ", " ) ));
-                                    final IdentityChangeResponse response = new IdentityChangeResponse( );
-                                    IdentityService.instance( ).create( pair.getRight( ), this.getAuthor( ), IdentityStoreTestContext.SAMPLE_APPCODE, response );
-                                    System.out.println("Status: " + response.getStatus().getHttpCode() + " - " + response.getStatus().getType());
-                                    System.out.println("CUID: " + response.getCustomerId());
-                                    System.out.println("Message: " + response.getStatus().getMessage());
+                                    final ServiceContract activeServiceContract = ServiceContractService.instance().getActiveServiceContract(IdentityStoreTestContext.SAMPLE_APPCODE);
+                                    final ArrayList<AttributeStatus> formatStatuses = new ArrayList<>();
+                                    final Pair<Identity, List<AttributeStatus>> identityCreation = IdentityService.instance().create(pair.getRight(), this.getAuthor(), activeServiceContract, formatStatuses);
+                                    final Identity createdIdentity = identityCreation.getLeft();
+                                    if(createdIdentity != null)
+                                    {
+                                        System.out.println("Identity successfuly created");
+                                        System.out.println("CUID: " + createdIdentity.getCustomerId());
+                                    }
+                                    else
+                                    {
+                                        System.out.println("Identity could not be created");
+                                    }
+                                    System.out.println("Attribute Status: " + identityCreation.getRight());
                                     System.out.println();
                                 }
                                 catch( IdentityStoreException e )
@@ -326,7 +338,7 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
         duplicateRule.setCheckedAttributes(testDuplicateRule.getCheckedAttributes().stream().map(key -> {
             try {
                 return IdentityAttributeService.instance().getAttributeKey(key);
-            } catch (IdentityAttributeNotFoundException e) {
+            } catch (ResourceNotFoundException e) {
                 throw new RuntimeException(e);
             }
         }).collect(Collectors.toList()));
@@ -335,7 +347,7 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
             attributeTreatment.setAttributes(treatment.getAttributeKeys().stream().map(key -> {
                 try {
                     return IdentityAttributeService.instance().getAttributeKey(key);
-                } catch (IdentityAttributeNotFoundException e) {
+                } catch (ResourceNotFoundException e) {
                     throw new RuntimeException(e);
                 }
             }).collect(Collectors.toList()));

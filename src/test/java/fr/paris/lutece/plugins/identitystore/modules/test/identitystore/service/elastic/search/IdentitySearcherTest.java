@@ -33,13 +33,16 @@
  */
 package fr.paris.lutece.plugins.identitystore.modules.test.identitystore.service.elastic.search;
 
+import fr.paris.lutece.plugins.identitystore.business.contract.ServiceContract;
 import fr.paris.lutece.plugins.identitystore.modules.test.IdentityStoreJsonDataTestCase;
 import fr.paris.lutece.plugins.identitystore.modules.test.IdentityStoreTestContext;
 import fr.paris.lutece.plugins.identitystore.modules.test.data.TestDefinition;
 import fr.paris.lutece.plugins.identitystore.modules.test.data.TestIdentity;
-import fr.paris.lutece.plugins.identitystore.service.contract.ServiceContractNotFoundException;
+import fr.paris.lutece.plugins.identitystore.service.contract.ServiceContractService;
 import fr.paris.lutece.plugins.identitystore.service.identity.IdentityService;
+import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.IdentitySearchRequest;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.IdentitySearchResponse;
+import fr.paris.lutece.plugins.identitystore.web.exception.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,10 +69,11 @@ public class IdentitySearcherTest extends IdentityStoreJsonDataTestCase
         final IdentitySearchResponse identitySearchResponse = new IdentitySearchResponse( );
         try
         {
-            IdentityService.instance( ).search( this.toIdentitySearchRequest( testDefinition.getSearchRequest( ), false ), this.getAuthor( ), identitySearchResponse,
-                    IdentityStoreTestContext.SAMPLE_APPCODE );
+            final IdentitySearchRequest identitySearchRequest = this.toIdentitySearchRequest(testDefinition.getSearchRequest(), false);
+            final ServiceContract activeServiceContract = ServiceContractService.instance().getActiveServiceContract(IdentityStoreTestContext.SAMPLE_APPCODE);
+            IdentityService.instance( ).search(identitySearchRequest, this.getAuthor( ), activeServiceContract );
         }
-        catch( ServiceContractNotFoundException e )
+        catch( final ResourceNotFoundException e )
         {
             throw new RuntimeException( e );
         }

@@ -73,15 +73,6 @@
         <constructor-arg ref="identitystore.elasticsearch.identityIndexer" name="_identityIndexer"/>
     </bean>
 
-    <!-- Config -->
-    <bean id="identitystore.application.code.delete.authorized.list" class="java.util.ArrayList">
-        <constructor-arg>
-            <list>
-                <value></value>
-            </list>
-        </constructor-arg>
-    </bean>
-
     <!-- REST -->
     <bean id="identitystore.customObjectMapper"  class="fr.paris.lutece.plugins.identitystore.v3.web.rs.CustomMapper" />
     <bean id="identitystore.uncaughtExceptionMapper"  class="fr.paris.lutece.plugins.identitystore.v3.web.rs.error.UncaughtExceptionMapper" />

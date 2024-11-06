@@ -44671,3 +44671,9 @@ insert into public.geocodes_country (id_country, code, value, is_attached, date_
 insert into public.geocodes_country (id_country, code, value, is_attached, date_validity_start, date_validity_end) values (63, '99143', 'CHYPRE (EMPIRE ROYAUME-UNI)', 0, '1900-01-01', '1960-08-15');
 insert into public.geocodes_country (id_country, code, value, is_attached, date_validity_start, date_validity_end) values (64, '99146', 'ARMENIE (URSS)', 0, '1900-01-01', '1991-09-20');
 insert into public.geocodes_country (id_country, code, value, is_attached, date_validity_start, date_validity_end) values (58, '99352', 'ALGERIE', 0, '1962-07-05', '2999-12-31');
+
+alter table geocodes_country add column deprecated SMALLINT DEFAULT 0;
+alter table geocodes_city add column deprecated SMALLINT DEFAULT 0;
+
+CREATE INDEX IDX_VALUE_MIN_CITY ON geocodes_city( value_min );
+CREATE INDEX IDX_VALUE_MIN_COMPLETE_CITY ON geocodes_city( value_min_complete );

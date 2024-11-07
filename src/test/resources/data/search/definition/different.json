@@ -1,56 +1,15 @@
 {
   "$schema": "../../../schema/testDefinitionSchema.json",
   "testDefinition": {
-    "name": "RG_GEN_SuspectDoublon_04",
-    "description": "5 attributs égaux + 2 différents",
-    "duplicateRule": {
-      "code": "RG_GEN_SuspectDoublon_04",
-      "name": "5 attributs égaux + 2 différents",
-      "priority": 0,
-      "active": true,
-      "daemon": true,
-      "nbFilledAttributes": 7,
-      "nbEqualAttributes": 5,
-      "nbMissingAttributes": 0,
-      "checkedAttributes": [
-        "birthplace_code",
-        "birthcountry_code",
-        "birthdate",
-        "gender",
-        "family_name",
-        "preferred_username",
-        "first_name"
-      ],
-      "attributeTreatments": [
-        {
-          "type": "DIFFERENT",
-          "attributeKeys": [
-            "gender",
-            "preferred_username"
-          ]
-        },
-        {
-          "type": "DIFFERENT",
-          "attributeKeys": [
-            "gender",
-            "first_name"
-          ]
-        },
-        {
-          "type": "DIFFERENT",
-          "attributeKeys": [
-            "birthplace_code",
-            "first_name"
-          ]
-        }
-      ]
-    },
+    "name": "Multi differences",
+    "description": "Multi differences",
     "searchRequest": {
       "attributes": [
         {
           "key": "gender",
           "value": "1",
-          "type": "string"
+          "type": "string",
+          "searchType": "DIFFERENT"
         },
         {
           "key": "family_name",
@@ -60,12 +19,8 @@
         {
           "key": "first_name",
           "value": "Dominique David",
-          "type": "string"
-        },
-        {
-          "key": "preferred_username",
-          "value": "Tartampion",
-          "type": "string"
+          "type": "string",
+          "searchType": "DIFFERENT"
         },
         {
           "key": "birthdate",
@@ -86,7 +41,7 @@
     },
     "inputs": [
       {
-        "name": "John",
+        "name": "Identité 1",
         "attributes": [
           {
             "key": "gender",
@@ -101,11 +56,6 @@
           {
             "key": "first_name",
             "value": "John",
-            "type": "string"
-          },
-          {
-            "key": "preferred_username",
-            "value": "Tartampion",
             "type": "string"
           },
           {
@@ -145,12 +95,7 @@
           },
           {
             "key": "first_name",
-            "value": "Dominique David",
-            "type": "string"
-          },
-          {
-            "key": "preferred_username",
-            "value": "Tartampion",
+            "value": "David",
             "type": "string"
           },
           {
@@ -160,7 +105,7 @@
           },
           {
             "key": "birthplace_code",
-            "value": "91027",
+            "value": "93012",
             "type": "string"
           },
           {
@@ -176,7 +121,7 @@
         ]
       },
       {
-        "name": "DominiqueDavid",
+        "name": "Identité 3",
         "attributes": [
           {
             "key": "gender",
@@ -190,52 +135,7 @@
           },
           {
             "key": "first_name",
-            "value": "Dominique David",
-            "type": "string"
-          },
-          {
-            "key": "preferred_username",
-            "value": "Crotale",
-            "type": "string"
-          },
-          {
-            "key": "birthdate",
-            "value": "01/01/2002",
-            "type": "string"
-          },
-          {
-            "key": "birthplace_code",
-            "value": "91027",
-            "type": "string"
-          },
-          {
-            "key": "birthcountry_code",
-            "value": "99100",
-            "type": "string"
-          }
-        ]
-      },
-      {
-        "name": "Reginald",
-        "attributes": [
-          {
-            "key": "gender",
-            "value": "1",
-            "type": "string"
-          },
-          {
-            "key": "family_name",
-            "value": "Dupont",
-            "type": "string"
-          },
-          {
-            "key": "first_name",
-            "value": "Reginald",
-            "type": "string"
-          },
-          {
-            "key": "preferred_username",
-            "value": "Tartampion",
+            "value": "David-Dominique",
             "type": "string"
           },
           {
@@ -252,19 +152,12 @@
             "key": "birthcountry_code",
             "value": "99100",
             "type": "string"
-          },
-          {
-            "key": "fixed_phone",
-            "value": "0123456789",
-            "type": "string"
           }
         ]
       }
     ],
     "expected": [
-      "John",
-      "DominiqueDavid",
-      "Reginald"
+      "Identité 1"
     ]
   }
 }

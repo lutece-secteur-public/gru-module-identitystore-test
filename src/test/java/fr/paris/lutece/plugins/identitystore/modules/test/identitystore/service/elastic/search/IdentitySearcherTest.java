@@ -69,7 +69,7 @@ public class IdentitySearcherTest extends IdentityStoreJsonDataTestCase
         final IdentitySearchResponse identitySearchResponse = new IdentitySearchResponse( );
         try
         {
-            final IdentitySearchRequest identitySearchRequest = this.toIdentitySearchRequest(testDefinition.getSearchRequest(), false);
+            final IdentitySearchRequest identitySearchRequest = this.toIdentitySearchRequest(testDefinition.getSearchRequest(), true);
             final ServiceContract activeServiceContract = ServiceContractService.instance().getActiveServiceContract(IdentityStoreTestContext.SAMPLE_APPCODE);
             IdentityService.instance( ).search(identitySearchRequest, this.getAuthor( ), activeServiceContract );
         }

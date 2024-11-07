@@ -36,12 +36,11 @@ package fr.paris.lutece.plugins.identitystore.modules.test.quality.service;
 import fr.paris.lutece.plugins.identitystore.business.rules.duplicate.DuplicateRule;
 import fr.paris.lutece.plugins.identitystore.modules.quality.service.SearchDuplicatesService;
 import fr.paris.lutece.plugins.identitystore.modules.test.IdentityStoreJsonDataTestCase;
+import fr.paris.lutece.plugins.identitystore.modules.test.data.TestAttribute;
 import fr.paris.lutece.plugins.identitystore.modules.test.data.TestDefinition;
 import fr.paris.lutece.plugins.identitystore.modules.test.data.TestIdentity;
 import fr.paris.lutece.plugins.identitystore.service.duplicate.DuplicateRuleService;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.IdentityDto;
-import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.ResponseStatusType;
-import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.DuplicateSearchResponse;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.QualifiedIdentitySearchResult;
 
 import java.util.Collections;
@@ -64,7 +63,7 @@ public class SearchDuplicatesServiceTest extends IdentityStoreJsonDataTestCase
     }
 
     @Override
-    protected List<TestIdentity> runDefinition(final TestDefinition testDefinition ) throws Exception
+    protected List<TestIdentity> runDefinition( final TestDefinition testDefinition ) throws Exception
     {
         System.out.println( "[Create duplicate rule " + testDefinition.getDuplicateRule().getCode() + "]" );
         System.out.println("Checked attributes: " + String.join(", ", testDefinition.getDuplicateRule().getCheckedAttributes()));
@@ -82,8 +81,8 @@ public class SearchDuplicatesServiceTest extends IdentityStoreJsonDataTestCase
         System.out.println( "----- Execute duplicate search request -----" );
         System.out.println( "\n[Duplicate search attributes]\n" + testDefinition.getSearchRequest().getAttributes().stream().map(a -> a.getKey() + "=" + a.getValue( ) ).collect( Collectors.joining( ", " ) ) );
         Thread.sleep( 1000 );
-        final IdentityDto testedIdentity = this.toIdentityDto(testDefinition.getSearchRequest());
-        final Map<String, QualifiedIdentitySearchResult> result = SearchDuplicatesService.instance().findDuplicates(testedIdentity, Collections.singletonList(duplicateRule), Collections.emptyList());
+
+        final Map<String, QualifiedIdentitySearchResult> result = SearchDuplicatesService.instance().findDuplicates(testDefinition.getSearchRequest().getAttributes().stream( ).collect( Collectors.toMap( TestAttribute::getKey, TestAttribute::getValue ) ), Collections.singletonList(duplicateRule) , Collections.emptyList());
         final QualifiedIdentitySearchResult qualifiedIdentitySearchResult = result.get(duplicateRule.getCode());
         final List<IdentityDto> duplicates = qualifiedIdentitySearchResult.getQualifiedIdentities();
         if(!duplicates.isEmpty())

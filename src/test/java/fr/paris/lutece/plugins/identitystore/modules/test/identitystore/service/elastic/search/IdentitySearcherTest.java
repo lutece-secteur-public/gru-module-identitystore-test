@@ -66,7 +66,7 @@ public class IdentitySearcherTest extends IdentityStoreJsonDataTestCase
         final IdentitySearchResponse identitySearchResponse = new IdentitySearchResponse( );
         try
         {
-            IdentityService.instance( ).search( this.toIdentitySearchRequest( testDefinition.getSearchRequest( ), false ), this.getAuthor( ), identitySearchResponse,
+            IdentityService.instance( ).search( this.toIdentitySearchRequest( testDefinition.getSearchRequest( ), true ), this.getAuthor( ), identitySearchResponse,
                     IdentityStoreTestContext.SAMPLE_APPCODE );
         }
         catch( ServiceContractNotFoundException e )

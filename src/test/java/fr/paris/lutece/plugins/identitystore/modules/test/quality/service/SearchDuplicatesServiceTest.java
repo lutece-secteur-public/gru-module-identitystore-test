@@ -36,6 +36,7 @@ package fr.paris.lutece.plugins.identitystore.modules.test.quality.service;
 import fr.paris.lutece.plugins.identitystore.business.rules.duplicate.DuplicateRule;
 import fr.paris.lutece.plugins.identitystore.modules.quality.service.SearchDuplicatesService;
 import fr.paris.lutece.plugins.identitystore.modules.test.IdentityStoreJsonDataTestCase;
+import fr.paris.lutece.plugins.identitystore.modules.test.data.TestAttribute;
 import fr.paris.lutece.plugins.identitystore.modules.test.data.TestDefinition;
 import fr.paris.lutece.plugins.identitystore.modules.test.data.TestIdentity;
 import fr.paris.lutece.plugins.identitystore.service.duplicate.DuplicateRuleService;
@@ -61,7 +62,7 @@ public class SearchDuplicatesServiceTest extends IdentityStoreJsonDataTestCase
     }
 
     @Override
-    protected List<TestIdentity> runDefinition(final TestDefinition testDefinition ) throws Exception
+    protected List<TestIdentity> runDefinition( final TestDefinition testDefinition ) throws Exception
     {
         System.out.println( "[Create duplicate rule " + testDefinition.getDuplicateRule().getCode() + "]" );
         System.out.println("Checked attributes: " + String.join(", ", testDefinition.getDuplicateRule().getCheckedAttributes()));
@@ -79,7 +80,7 @@ public class SearchDuplicatesServiceTest extends IdentityStoreJsonDataTestCase
         System.out.println( "----- Execute duplicate search request -----" );
         System.out.println( "\n[Duplicate search attributes]\n" + testDefinition.getSearchRequest().getAttributes().stream().map(a -> a.getKey() + "=" + a.getValue( ) ).collect( Collectors.joining( ", " ) ) );
         Thread.sleep( 1000 );
-        final DuplicateSearchResponse response = SearchDuplicatesService.instance( ).findDuplicates( this.toIdentityDto(testDefinition.getSearchRequest()), Collections.singletonList(testDefinition.getDuplicateRule().getCode()) , Collections.emptyList() );
+        final DuplicateSearchResponse response = SearchDuplicatesService.instance( ).findDuplicates( testDefinition.getSearchRequest().getAttributes().stream( ).collect( Collectors.toMap( TestAttribute::getKey, TestAttribute::getValue ) ), Collections.singletonList(testDefinition.getDuplicateRule().getCode()) , Collections.emptyList() );
         System.out.println("\n[Duplicate search response status]\n " + response.getStatus().getHttpCode() + " - " + response.getStatus().getType().name() + " - " + response.getStatus().getMessage( ) );
         if( ResponseStatusType.OK == response.getStatus().getType() )
         {

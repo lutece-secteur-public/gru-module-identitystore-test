@@ -1,57 +1,15 @@
 {
   "$schema": "../../../schema/testDefinitionSchema.json",
   "testDefinition": {
-    "name": "RG_GEN_StrictDoublon_01",
-    "description": "6 attributs pivot égaux (doublons stricts)",
-    "duplicateRule": {
-      "code": "RG_GEN_StrictDoublon_01",
-      "name": "Règle de détection des doublons stricts pour les personnes nées en France",
-      "priority": 0,
-      "active": true,
-      "daemon": true,
-      "nbFilledAttributes": 6,
-      "nbEqualAttributes": 6,
-      "nbMissingAttributes": 0,
-      "checkedAttributes": [
-        "birthplace_code",
-        "birthcountry_code",
-        "birthdate",
-        "gender",
-        "family_name",
-        "first_name"
-      ]
-    },
+    "name": "Recherche :: Prénoms :: Différence 07",
+    "description": "Vérification de la règle des égalités de prénoms.\n CF. https://dev.lutece.paris.fr/bugtracker/issues/28157.\nReq difference-06",
     "searchRequest": {
       "attributes": [
         {
-          "key": "gender",
-          "value": "1",
-          "type": "string"
-        },
-        {
-          "key": "family_name",
-          "value": "Dupont",
-          "type": "string"
-        },
-        {
           "key": "first_name",
-          "value": "william",
-          "type": "string"
-        },
-        {
-          "key": "birthdate",
-          "value": "01/01/2002",
-          "type": "string"
-        },
-        {
-          "key": "birthplace_code",
-          "value": "91027",
-          "type": "string"
-        },
-        {
-          "key": "birthcountry_code",
-          "value": "99100",
-          "type": "string"
+          "value": "Dominique David",
+          "type": "string",
+          "searchType": "DIFFERENT"
         }
       ]
     },
@@ -61,7 +19,7 @@
         "attributes": [
           {
             "key": "gender",
-            "value": "1",
+            "value": "2",
             "type": "string"
           },
           {
@@ -71,7 +29,7 @@
           },
           {
             "key": "first_name",
-            "value": "William",
+            "value": "John",
             "type": "string"
           },
           {
@@ -111,7 +69,7 @@
           },
           {
             "key": "first_name",
-            "value": "WILLIAM",
+            "value": "David",
             "type": "string"
           },
           {
@@ -121,7 +79,7 @@
           },
           {
             "key": "birthplace_code",
-            "value": "91027",
+            "value": "93012",
             "type": "string"
           },
           {
@@ -174,7 +132,7 @@
     ],
     "expected": [
       "Identité 1",
-      "Identité 2"
+      "Identité 3"
     ]
   }
 }

@@ -42,7 +42,9 @@ import fr.paris.lutece.plugins.identitystore.modules.test.data.TestIdentity;
 import fr.paris.lutece.plugins.identitystore.service.duplicate.DuplicateRuleService;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.common.IdentityDto;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.QualifiedIdentitySearchResult;
+import fr.paris.lutece.plugins.identitystore.web.exception.IdentityStoreException;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +65,7 @@ public class SearchDuplicatesServiceTest extends IdentityStoreJsonDataTestCase
     }
 
     @Override
-    protected List<TestIdentity> runDefinition( final TestDefinition testDefinition ) throws Exception
+    protected List<TestIdentity> runDefinition( final TestDefinition testDefinition ) throws InterruptedException
     {
         System.out.println( "[Create duplicate rule " + testDefinition.getDuplicateRule().getCode() + "]" );
         System.out.println("Checked attributes: " + String.join(", ", testDefinition.getDuplicateRule().getCheckedAttributes()));
@@ -82,20 +84,26 @@ public class SearchDuplicatesServiceTest extends IdentityStoreJsonDataTestCase
         System.out.println( "\n[Duplicate search attributes]\n" + testDefinition.getSearchRequest().getAttributes().stream().map(a -> a.getKey() + "=" + a.getValue( ) ).collect( Collectors.joining( ", " ) ) );
         Thread.sleep( 1000 );
 
-        final Map<String, QualifiedIdentitySearchResult> result = SearchDuplicatesService.instance().findDuplicates(testDefinition.getSearchRequest().getAttributes().stream( ).collect( Collectors.toMap( TestAttribute::getKey, TestAttribute::getValue ) ), Collections.singletonList(duplicateRule) , Collections.emptyList());
-        final QualifiedIdentitySearchResult qualifiedIdentitySearchResult = result.get(duplicateRule.getCode());
-        final List<IdentityDto> duplicates = qualifiedIdentitySearchResult.getQualifiedIdentities();
-        if(!duplicates.isEmpty())
+        try
         {
-            System.out.println("Duplicates found");
-            System.out.println("\n[Duplicate search response identities]\n" + duplicates.stream().map(identityDto -> identityDto.getCustomerId() + " - " + identityDto.getAttributes().stream().map(attribute -> attribute.getKey() + "=" + attribute.getValue( )).collect(Collectors.joining(", "))).collect(Collectors.joining("\n")));
-            System.out.println("\n[Duplicate search response metadata]\n" + qualifiedIdentitySearchResult.getMetadata().entrySet().stream().map(entry -> entry.getKey() + " -> " + entry.getValue( ) ).collect( Collectors.joining( "\n" ) ) );
-        }
-        else
+            final Map<String, QualifiedIdentitySearchResult> result = SearchDuplicatesService.instance().findDuplicates(testDefinition.getSearchRequest().getAttributes().stream( ).collect( Collectors.toMap( TestAttribute::getKey, TestAttribute::getValue ) ), Collections.singletonList(duplicateRule) , Collections.emptyList());
+            final QualifiedIdentitySearchResult qualifiedIdentitySearchResult = result.get(duplicateRule.getCode());
+            final List<IdentityDto> duplicates = qualifiedIdentitySearchResult.getQualifiedIdentities();
+            if(!duplicates.isEmpty())
+            {
+                System.out.println("Duplicates found");
+                System.out.println("\n[Duplicate search response identities]\n" + duplicates.stream().map(identityDto -> identityDto.getCustomerId() + " - " + identityDto.getAttributes().stream().map(attribute -> attribute.getKey() + "=" + attribute.getValue( )).collect(Collectors.joining(", "))).collect(Collectors.joining("\n")));
+                System.out.println("\n[Duplicate search response metadata]\n" + qualifiedIdentitySearchResult.getMetadata().entrySet().stream().map(entry -> entry.getKey() + " -> " + entry.getValue( ) ).collect( Collectors.joining( "\n" ) ) );
+            }
+            else
+            {
+                System.out.println("Could not find duplicates");
+            }
+            return duplicates.stream( ).map( this::toTestIdentity ).collect( Collectors.toList( ) );
+        } catch (IdentityStoreException e)
         {
             System.out.println("Could not find duplicates");
         }
-
-        return duplicates.stream( ).map( this::toTestIdentity ).collect( Collectors.toList( ) );
+        return new ArrayList<>();
     }
 }

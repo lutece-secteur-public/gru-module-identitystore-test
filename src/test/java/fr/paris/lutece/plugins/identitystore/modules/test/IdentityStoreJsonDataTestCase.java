@@ -47,6 +47,7 @@ import fr.paris.lutece.plugins.identitystore.modules.test.data.TestDuplicateRule
 import fr.paris.lutece.plugins.identitystore.modules.test.data.TestIdentity;
 import fr.paris.lutece.plugins.identitystore.modules.test.util.FileNameAlphanumericComparator;
 import fr.paris.lutece.plugins.identitystore.modules.test.util.StringAlphanumericComparator;
+import fr.paris.lutece.plugins.identitystore.service.attribute.IdentityAttributeFormatterService;
 import fr.paris.lutece.plugins.identitystore.service.attribute.IdentityAttributeService;
 import fr.paris.lutece.plugins.identitystore.service.contract.ServiceContractService;
 import fr.paris.lutece.plugins.identitystore.service.identity.IdentityService;
@@ -146,8 +147,14 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
                                     System.out.println( "[Create identity " + pair.getLeft() + "]" );
                                     System.out.println(pair.getRight().getIdentity().getAttributes().stream().map(a -> a.getKey() + "=" + a.getValue( ) ).collect( Collectors.joining( ", " ) ));
                                     final ServiceContract activeServiceContract = ServiceContractService.instance().getActiveServiceContract(IdentityStoreTestContext.SAMPLE_APPCODE);
+
+                                    //pour faire passer la création des identités par les formateurs
+                                    //final ArrayList<AttributeStatus> formatStatuses = new ArrayList<>(IdentityAttributeFormatterService.instance().formatIdentityChangeRequestAttributeValues(pair.getRight()));
+
+                                    //pour ne pas faire passer les identités par les formateurs
                                     final ArrayList<AttributeStatus> formatStatuses = new ArrayList<>();
                                     final Pair<Identity, List<AttributeStatus>> identityCreation = IdentityService.instance().create(pair.getRight(), this.getAuthor(), activeServiceContract, formatStatuses);
+                                    Thread.sleep( 1000 );
                                     final Identity createdIdentity = identityCreation.getLeft();
                                     if(createdIdentity != null)
                                     {
@@ -161,7 +168,7 @@ public abstract class IdentityStoreJsonDataTestCase extends IdentityStoreBDDAndE
                                     System.out.println("Attribute Status: " + identityCreation.getRight());
                                     System.out.println();
                                 }
-                                catch( IdentityStoreException e )
+                                catch(IdentityStoreException | InterruptedException e )
                                 {
                                     throw new RuntimeException( e );
                                 }

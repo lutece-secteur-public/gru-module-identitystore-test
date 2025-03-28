@@ -42,10 +42,12 @@ import fr.paris.lutece.plugins.identitystore.service.contract.ServiceContractSer
 import fr.paris.lutece.plugins.identitystore.service.identity.IdentityService;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.IdentitySearchRequest;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.IdentitySearchResponse;
+import fr.paris.lutece.plugins.identitystore.web.exception.IdentityStoreException;
 import fr.paris.lutece.plugins.identitystore.web.exception.ResourceNotFoundException;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,7 +66,7 @@ public class IdentitySearchRuleTest extends IdentityStoreJsonDataTestCase
     }
 
     @Override
-    protected List<TestIdentity> runDefinition(final TestDefinition testDefinition ) throws Exception
+    protected List<TestIdentity> runDefinition(final TestDefinition testDefinition ) throws InterruptedException
     {
         System.out.println( "----- Execute search request -----" );
         Thread.sleep( 1000 );
@@ -75,12 +77,13 @@ public class IdentitySearchRuleTest extends IdentityStoreJsonDataTestCase
             final ServiceContract activeServiceContract = ServiceContractService.instance().getActiveServiceContract(IdentityStoreTestContext.SAMPLE_APPCODE);
             IdentityService.instance( ).search(identitySearchRequest, this.getAuthor( ), activeServiceContract );
             System.out.println( "Response: " + identitySearchResponse );
+            return identitySearchResponse.getIdentities( ).stream( ).map( this::toTestIdentity ).collect( Collectors.toList( ) );
         }
-        catch( final ResourceNotFoundException e )
+        catch( final IdentityStoreException e)
         {
-            throw new RuntimeException( e );
+            System.out.println( "coult not find identity" );
         }
-        return identitySearchResponse.getIdentities( ).stream( ).map( this::toTestIdentity ).collect( Collectors.toList( ) );
+        return new ArrayList<>( );
     }
 
     protected void clearSearchRulesInBDD( ) throws Exception

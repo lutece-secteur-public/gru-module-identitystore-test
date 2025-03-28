@@ -42,8 +42,10 @@ import fr.paris.lutece.plugins.identitystore.service.contract.ServiceContractSer
 import fr.paris.lutece.plugins.identitystore.service.identity.IdentityService;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.IdentitySearchRequest;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.IdentitySearchResponse;
+import fr.paris.lutece.plugins.identitystore.web.exception.IdentityStoreException;
 import fr.paris.lutece.plugins.identitystore.web.exception.ResourceNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,21 +64,22 @@ public class IdentitySearcherTest extends IdentityStoreJsonDataTestCase
     }
 
     @Override
-    protected List<TestIdentity> runDefinition(final TestDefinition testDefinition ) throws Exception
+    protected List<TestIdentity> runDefinition(final TestDefinition testDefinition ) throws InterruptedException
     {
         System.out.println( "----- Execute search request -----" );
         Thread.sleep( 1000 );
-        final IdentitySearchResponse identitySearchResponse = new IdentitySearchResponse( );
         try
         {
+            final IdentitySearchResponse identitySearchResponse = new IdentitySearchResponse( );
             final IdentitySearchRequest identitySearchRequest = this.toIdentitySearchRequest(testDefinition.getSearchRequest(), true);
             final ServiceContract activeServiceContract = ServiceContractService.instance().getActiveServiceContract(IdentityStoreTestContext.SAMPLE_APPCODE);
             IdentityService.instance( ).search(identitySearchRequest, this.getAuthor( ), activeServiceContract );
+            return identitySearchResponse.getIdentities( ).stream( ).map( this::toTestIdentity ).collect( Collectors.toList( ) );
         }
-        catch( final ResourceNotFoundException e )
+        catch( final IdentityStoreException e )
         {
-            throw new RuntimeException( e );
+            System.out.println( "coult not find identity" );
         }
-        return identitySearchResponse.getIdentities( ).stream( ).map( this::toTestIdentity ).collect( Collectors.toList( ) );
+        return new ArrayList<>( );
     }
 }

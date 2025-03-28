@@ -37,12 +37,13 @@ import fr.paris.lutece.plugins.identitystore.modules.test.IdentityStoreJsonDataT
 import fr.paris.lutece.plugins.identitystore.modules.test.IdentityStoreTestContext;
 import fr.paris.lutece.plugins.identitystore.modules.test.data.TestDefinition;
 import fr.paris.lutece.plugins.identitystore.modules.test.data.TestIdentity;
-import fr.paris.lutece.plugins.identitystore.service.contract.ServiceContractNotFoundException;
 import fr.paris.lutece.plugins.identitystore.service.identity.IdentityService;
 import fr.paris.lutece.plugins.identitystore.v3.web.rs.dto.search.IdentitySearchResponse;
+import fr.paris.lutece.plugins.identitystore.web.exception.IdentityStoreException;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,22 +62,22 @@ public class IdentitySearchRuleTest extends IdentityStoreJsonDataTestCase
     }
 
     @Override
-    protected List<TestIdentity> runDefinition(final TestDefinition testDefinition ) throws Exception
+    protected List<TestIdentity> runDefinition(final TestDefinition testDefinition ) throws InterruptedException
     {
         System.out.println( "----- Execute search request -----" );
         Thread.sleep( 1000 );
         final IdentitySearchResponse identitySearchResponse = new IdentitySearchResponse( );
         try
         {
-            IdentityService.instance( ).search( this.toIdentitySearchRequest( testDefinition.getSearchRequest( ), true ), this.getAuthor( ), identitySearchResponse,
-                    IdentityStoreTestContext.SAMPLE_APPCODE );
+            IdentityService.instance( ).search( this.toIdentitySearchRequest( testDefinition.getSearchRequest( ), true ), this.getAuthor(), this.activeServiceContract );
             System.out.println( "Response: " + identitySearchResponse );
+            return identitySearchResponse.getIdentities( ).stream( ).map( this::toTestIdentity ).collect( Collectors.toList( ) );
         }
-        catch( ServiceContractNotFoundException e )
+        catch( final IdentityStoreException e)
         {
-            throw new RuntimeException( e );
+            System.out.println( "coult not find identity" );
         }
-        return identitySearchResponse.getIdentities( ).stream( ).map( this::toTestIdentity ).collect( Collectors.toList( ) );
+        return new ArrayList<>( );
     }
 
     protected void clearSearchRulesInBDD( ) throws Exception

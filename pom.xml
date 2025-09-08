@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
@@ -45,13 +44,13 @@
         <dependency>
             <groupId>fr.paris.lutece</groupId>
             <artifactId>lutece-core</artifactId>
-            <version>[7.0.14,)</version>
+            <version>[7.0.14,7.9.9)</version>
             <type>lutece-core</type>
         </dependency>
         <dependency>
             <groupId>fr.paris.lutece.plugins</groupId>
             <artifactId>library-identitybusiness</artifactId>
-            <version>[3.1.5-SNAPSHOT,)</version>
+            <version>[3.1.5-SNAPSHOT,3.9.9)</version>
         </dependency>
         <dependency>
             <groupId>fr.paris.lutece.plugins</groupId>
@@ -61,22 +60,22 @@
         <dependency>
             <groupId>fr.paris.lutece.plugins</groupId>
             <artifactId>plugin-identitystore</artifactId>
-            <version>[3.1.5-SNAPSHOT,)</version>
+            <version>[3.1.5-SNAPSHOT,3.9.9)</version>
         </dependency>
         <dependency>
             <groupId>fr.paris.lutece.plugins</groupId>
             <artifactId>module-identitystore-quality</artifactId>
-            <version>[1.0.3-SNAPSHOT,)</version>
+            <version>[1.0.3-SNAPSHOT,1.9.9)</version>
         </dependency>
         <dependency>
             <groupId>fr.paris.lutece.plugins</groupId>
             <artifactId>library-identitystore-v1-v2</artifactId>
-            <version>[1.0.1-SNAPSHOT,)</version>
+            <version>[1.0.1-SNAPSHOT,1.9.9)</version>
         </dependency>
         <dependency>
             <groupId>fr.paris.lutece.plugins</groupId>
             <artifactId>plugin-geocodes</artifactId>
-            <version>[1.0.4,)</version>
+            <version>[1.0.4,1.9.9)</version>
         </dependency>
 
         <!-- TEST -->
